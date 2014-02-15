@@ -352,7 +352,7 @@ void http_response_printf(HttpResponse *res, const char *format, ...)
 
 	if ((res->data_len + strlen(tmp) + 1) < res->data_len_alloced) {
 		if (res->data_len)
-			memcpy(res->data + res->data_len - 1, tmp, strlen(tmp) + 1);
+			memcpy(res->data + res->data_len, tmp, strlen(tmp) + 1);
 		else
 			memcpy(res->data, tmp, strlen(tmp) + 1);
 	} else if (!res->data_len) {	/* no data printed yet */
@@ -360,12 +360,12 @@ void http_response_printf(HttpResponse *res, const char *format, ...)
 		memcpy(res->data, tmp, strlen(tmp) + 1);
 		res->data_len_alloced = strlen(tmp) + 1;
 	} else {
-		res->data = realloc(res->data, res->data_len + strlen(tmp));
-		memcpy(res->data + res->data_len - 1, tmp, strlen(tmp) + 1);
-		res->data_len_alloced = res->data_len + strlen(tmp);
+		res->data = realloc(res->data, res->data_len + strlen(tmp) + 1);
+		memcpy(res->data + res->data_len, tmp, strlen(tmp) + 1);
+		res->data_len_alloced = res->data_len + strlen(tmp) + 1;
 	}
 
-	res->data_len = strlen(res->data) + 1;
+	res->data_len = strlen(res->data); /* calculating without followed '\0' */
 	free(tmp);
 }
 
