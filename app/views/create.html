@@ -1,0 +1,18 @@
+<div class="article">
+    <div class="session"> 
+        <h2 class="ui header">Create Article</h2>
+        <div class="ui form">
+            <div class="field">
+                <input ng-keyup="Preview()" type="text" ng-model="title" placeholder="Title">
+            </div>
+            <div class="field">
+                <textarea ng-keyup="Preview()" ng-model="createContent" placeholder="Content"></textarea>
+            </div>
+            <div class="ui purple right submit button" ng-click="create()">Submit</div>
+            <div class="ui red left submit button">Reset</div>
+            <p></p>
+
+            <div ng-bind-html="liveContent"></div>
+        </div>    
+    </div>
+</div>

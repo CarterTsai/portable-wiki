@@ -490,7 +490,7 @@ void wiki_handle_http_request(HttpRequest *req)
 	char *folder;
 
 	util_dehttpize(page);	/* remove any encoding on the requested page name. */
-
+	
 	if (!strcmp(page, "/")) {
 		if (access("WikiHome", R_OK) != 0)
 			wiki_redirect(res, "/WikiHome?create");
@@ -699,7 +699,7 @@ int wiki_init(char *portablewiki_home, int restore_WikiHelp)
 			}
 			snprintf(datadir, 512, "%s/.portablewiki", getenv("HOME"));
 #endif
-			sprintf(datadir, "./data");
+			sprintf(datadir, "./app");
 		}
 	}
 

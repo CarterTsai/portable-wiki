@@ -1,0 +1,91 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="bower_components/semantic-ui/packaged/css/semantic.css"> 
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="styles/reset.css">
+        <!-- endbuild -->
+        <script src="bower_components/angular/angular.js"></script>
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/dbFactory.js"></script>
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/semantic-ui/packaged/javascript/semantic.js"></script>
+        <!-- endbuild -->
+</head>
+  <body ng-app="styleApp">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+      <script src="bower_components/es5-shim/es5-shim.js"></script>
+      <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    
+    <div class = "ui fixed transparent main menu" ng-init="isShowMenu=true" ng-controller="MainCtrl">
+        <div class="container">
+            <a href="/" class="launch item"><i class="icon home"></i> PortableWiki </a>
+            <a href="" ng-click="$parent.isShowMenu=!$parent.isShowMenu" class="item icon">
+                <i class="ordered list icon"></i> Index
+            </a>
+            <a href="#/Create" class="item icon"><i class="plus icon"></i> Create</a>
+            <div class="ui mini icon input search_offset">
+                <input type="text" placeholder="Search ...">
+                <i class="search icon"></i>
+            </div>
+            <div class="right menu">
+                <div class="ui icon top right pointing dropdown item">
+                  <i class="settings icon"></i>
+                  <div class="menu">
+                    <a href="#/Changes" class="icon item"><i class="info icon"></i>Changes</a>
+                    <a href="#/Help" class="item"><i class="help icon"></i>Help</a>
+                    <a href="#/About" class="item"><i class="user icon"></i>About</a>
+                  </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+    
+    <div class="ui one column grid ">
+        <div class="left_menu column" ng-class="{show_left_menu:$parent.isShowMenu}" ng-controller="MainCtrl">
+            <div class="ui ordered list showbox" ng-class="{show_menu:$parent.isShowMenu}">
+                <div ng-repeat="list in lists">
+                    <div class="item" ng-bind="list.index"></div>
+                        <div class="list">
+                            <div class="item" ng-repeat="s in list.sub" 
+                                              ng-bind="s">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="contain" ng-view=""></div>
+        </div>
+    </div>
+
+    <div class="footer">                                                            
+        <p>PortableWiki Version: 0.3</p>                                            
+    </div>   
+
+        <!-- build:js scripts/modules.js -->
+        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        <!-- endbuild -->
+    
+</body>
+</html>

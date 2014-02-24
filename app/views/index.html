@@ -1,0 +1,13 @@
+<div class="article">
+    <div class="session">
+        <div class="ui ordered list">
+            <div ng-repeat="list in lists">
+                <div class="item" ng-bind="list.index"></div>
+                    <div class="list">
+                        <div class="item" ng-repeat="s in list.sub" 
+                                          ng-bind="s"></div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>

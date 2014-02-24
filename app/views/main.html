@@ -1,0 +1,23 @@
+<div class="article">
+    <div class="session" ng-repeat="content in contents" ng-init="isEdit= false">
+        <div class="function">
+            <a ng-show="isEdit"><i class="icon doc basic" ng-click="show($index);isEdit=false"></i></a>
+            <a ng-hide="isEdit"><i class="icon edit" ng-click="edit($index);isEdit=true"></i></a>
+            <a><i class="icon delete" ng-click="delete($index)"></i></a>
+        </div>
+        <div class="content view" ng-hide="isEdit" ng-bind-html="content"></div>
+        <div class="content edit d{{$index}}" ng-show="isEdit">
+            <textarea ng-bind-html="contents[$index]"></textarea>
+        </div>
+    </div>
+</div>
+<div class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">
+    Do you Delete This Article
+  </div>
+  <div class="actions">
+    <div class="ui button cancel">Cancel</div>
+    <div class="ui button ok">OK</div>
+  </div>
+</div>
