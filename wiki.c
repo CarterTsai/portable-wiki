@@ -503,7 +503,7 @@ void wiki_handle_http_request(HttpRequest *req)
     		http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
 	    	http_response_send(res);
         }      
-		//page = "/index.html";
+	//	page = "/index.html";
         tmp_str = "index.html"; 
         src_data = file_read(tmp_str);
 
@@ -529,7 +529,7 @@ void wiki_handle_http_request(HttpRequest *req)
     
     if (!strcasecmp(tmp_str, ".js")) 
     { 
-		/*  Return HTML page */
+		/*  Return javascript file */
         tmp_str = page + 1; 
         src_data = file_read(tmp_str);
 
@@ -541,7 +541,7 @@ void wiki_handle_http_request(HttpRequest *req)
     
     if (!strcasecmp(tmp_str, ".svg")) 
     { 
-		/*  Return HTML page */
+		/*  Return svg */
         tmp_str = page + 1; 
         src_data = file_read(tmp_str);
 
@@ -563,10 +563,10 @@ void wiki_handle_http_request(HttpRequest *req)
     if (!strcasecmp(tmp_str, ".css") ) { 
 		/*  Return CSS page */
         tmp_str = page + 1; 
-        CssData = file_read(tmp_str);
+        src_data = file_read(tmp_str);
 
 		http_response_set_content_type(res, "text/css");
-		http_response_printf(res, "%s", CssData);
+		http_response_printf(res, "%s", src_data);
 		http_response_send(res);
 		exit(0);
 	}

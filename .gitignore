@@ -5,4 +5,4 @@ portablewiki
 app/WikiHelp
 app/WikiHome
 autorun.sh
-
+*.o
