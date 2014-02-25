@@ -3,7 +3,7 @@ EXECUTABLE = portablewiki
 # Toolchain configurations
 CC = $(CROSS_COMPILE)gcc
 
-CFLAGS = -Os -g
+CFLAGS = -O0 -g3
 CFLAGS += -std=c99
 CFLAGS += -Wall
 CFLAGS += -ffunction-sections -fdata-sections

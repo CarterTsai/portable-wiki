@@ -1,113 +1,129 @@
 /* Space out content a bit */
+
 body {
-    background-color: #ececec;
-}
-.contain {
-    padding-top: 10px;
+  background-color: #ececec;
 }
 
-.container {
+.contain {
+  padding-top: 10px;
 }
+
+
+
 .container > .center {
-    margin-left: 30px;
+  margin-left: 30px;
 }
 
 .left_menu {
-   display:none !important;
+  display: none !important;
 }
+
 .show_left_menu {
-   display:block !important;
+  display: block !important;
 }
 
 .left_menu > .showbox {
-    overflow: hidden;
-    height: 0px;
+  overflow: hidden;
+  height: 0px;
 }
 
 .show_menu {
-    display:block !important;
-    animation-duration: 1s;
-    animation-name: slidein;
-    animation-fill-mode: forwards;
+  display: block !important;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-name: slidein;
+  animation-name: slidein;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
 }
 
 .article {
-    padding-top: 5px;
-    overflow: hidden;
+  padding-top: 5px;
+  overflow: hidden;
 }
 
 .article > .session {
-    min-height: 876px;
-    background-color: white;
-    padding: 28px 42px 42px 42px;
-    /* A4 width */
-    width: 620px;    
-    height: 100%;
-    line-height: 30px;
-    -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
-    margin: 0px auto 50px auto;
+  min-height: 876px;
+  background-color: white;
+  padding: 28px 42px 42px 42px;
+  /* A4 width */
+  width: 620px;
+  height: 100%;
+  line-height: 30px;
+  -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+  margin: 0px auto 50px auto;
 }
 
 .session > .content > textarea {
-    width: 620px;
-    height: 876px;
-    border: 1px solid #ccc;
+  width: 620px;
+  height: 876px;
+  border: 1px solid #ccc;
 }
 
 .session > .edit {
-    display: block;
+  display: block;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .session > .function {
-   position: relative;
-   float: right;
-   left: 30px;
-   top: -15px;
-   vertical-align: middle;
+  position: relative;
+  float: right;
+  left: 30px;
+  top: -15px;
+  vertical-align: middle;
 }
 
 .session > .function > a > i {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
 
 .session > .function > a > i:hover {
-    color: #ccc;
+  color: #ccc;
 }
 
 .column .setting {
-    font-size: 30px;
-    width: auto;
+  font-size: 30px;
+  width: auto;
 }
 
 .search_offset {
-    position: absolute;
-    margin-top: 3px !important;
-    margin-left: 5px !important;
+  position: absolute;
+  margin-top: 3px !important;
+  margin-left: 5px !important;
 }
 
 .footer {
-    width: 100%;
-    height: 70px;
-    background-color: #12372f;
-    color: white;
+  width: 100%;
+  height: 70px;
+  background-color: #12372f;
+  color: white;
 }
 
 .footer > p {
-    text-align: center;
-    padding-top: 25px;
+  text-align: center;
+  padding-top: 25px;
 }
 
- @keyframes slidein {
-      from {
-        height: 0px;
-      }
+@-webkit-keyframes slidein {
+  from {
+    height: 0px;
+  }
 
-      to {
-         height: 200px;
-      }
-    }
+  to {
+    height: 200px;
+  }
+}
+
+@keyframes slidein {
+  from {
+    height: 0px;
+  }
+
+  to {
+    height: 200px;
+  }
+}

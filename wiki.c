@@ -99,13 +99,14 @@ void wiki_show_page(HttpResponse *res, char *wikitext, char *page)
 
 	http_response_printf_alloc_buffer(res, strlen(wikitext)*2);
 
-	wiki_show_header(res, page, TRUE);
+    http_response_printf(res, wikitext);
+//	wiki_show_header(res, page, TRUE);
 
-	html_clean_wikitext = util_htmlize(wikitext, strlen(wikitext));
+//	html_clean_wikitext = util_htmlize(wikitext, strlen(wikitext));
 
-	wiki_print_data_as_html(res, html_clean_wikitext, page);
+//	wiki_print_data_as_html(res, html_clean_wikitext, page);
 
-	wiki_show_footer(res);  
+//	wiki_show_footer(res);  
 
 	http_response_send(res);
 
@@ -488,17 +489,82 @@ void wiki_handle_http_request(HttpRequest *req)
 	char *value;
 	char *str_ptr;
 	char *folder;
+	char *tmp_str;
+    char *src_data;
 
-	util_dehttpize(page);	/* remove any encoding on the requested page name. */
+    util_dehttpize(page);	/* remove any encoding on the requested page name. */
+
+    tmp_str = strrchr(page, '.'); 
 	
-	if (!strcmp(page, "/")) {
-		if (access("WikiHome", R_OK) != 0)
-			wiki_redirect(res, "/WikiHome?create");
-		page = "/WikiHome";
-	}
+    if (!strcmp(page, "/")) {
+		if (access("index.html", R_OK) != 0)
+        {        
+		    http_response_set_status(res, 404, "Not Found");
+    		http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
+	    	http_response_send(res);
+        }      
+		//page = "/index.html";
+        tmp_str = "index.html"; 
+        src_data = file_read(tmp_str);
 
-	if (!strcmp(page, "/styles.css")) {
+		http_response_set_content_type(res, "text/html");
+		http_response_printf(res, "%s", src_data);
+		http_response_send(res);
+		exit(0);
+
+	}
+    
+    if (!strcasecmp(tmp_str, ".html") ||
+        !strcasecmp(tmp_str, ".htm") ) 
+    { 
+		/*  Return HTML page */
+        tmp_str = page + 1; 
+        src_data = file_read(tmp_str);
+
+		http_response_set_content_type(res, "text/html");
+		http_response_printf(res, "%s", src_data);
+		http_response_send(res);
+		exit(0);
+	}
+    
+    if (!strcasecmp(tmp_str, ".js")) 
+    { 
+		/*  Return HTML page */
+        tmp_str = page + 1; 
+        src_data = file_read(tmp_str);
+
+		http_response_set_content_type(res, "application/javascript");
+		http_response_printf(res, "%s", src_data);
+		http_response_send(res);
+		exit(0);
+	}
+    
+    if (!strcasecmp(tmp_str, ".svg")) 
+    { 
+		/*  Return HTML page */
+        tmp_str = page + 1; 
+        src_data = file_read(tmp_str);
+
+		http_response_set_content_type(res, "image/svg+xml");
+		http_response_printf(res, "%s", src_data);
+		http_response_send(res);
+		exit(0);
+	}
+  
+    if (!strcasecmp(tmp_str, ".woff") || 
+        !strcasecmp(tmp_str, ".eof") || 
+        !strcasecmp(tmp_str, ".ttf")) 
+    { 
+		/*  Return Font */
+		http_response_send_bigfile(res, page + 1, "application/octet-stream");
+		exit(0);
+	}
+  
+    if (!strcasecmp(tmp_str, ".css") ) { 
 		/*  Return CSS page */
+        tmp_str = page + 1; 
+        CssData = file_read(tmp_str);
+
 		http_response_set_content_type(res, "text/css");
 		http_response_printf(res, "%s", CssData);
 		http_response_send(res);
