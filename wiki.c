@@ -491,11 +491,14 @@ void wiki_handle_http_request(HttpRequest *req)
 	char *folder;
 	char *tmp_str;
     char *src_data;
+    char wikipath[6];
 
     util_dehttpize(page);	/* remove any encoding on the requested page name. */
 
     tmp_str = strrchr(page, '.'); 
-	
+    strncpy(wikipath, (page+1), 5); 
+    wikipath[5] = '\0';
+
     if (!strcmp(page, "/")) {
 		if (access("index.html", R_OK) != 0)
         {        
@@ -511,8 +514,25 @@ void wiki_handle_http_request(HttpRequest *req)
 		http_response_printf(res, "%s", src_data);
 		http_response_send(res);
 		exit(0);
-
 	}
+
+    // Handle wiki Event
+    if( !strcmp(wikipath, "wiki/") ) {
+		page = page + 1;
+        if (access(page, R_OK) != 0 || !strcmp(page, "wiki/"))
+        {        
+		    http_response_set_status(res, 404, "Not Found");
+    		http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
+	    	http_response_send(res);
+        }      
+        
+        src_data = file_read(page);
+
+        http_response_set_content_type(res, "text/html");
+		http_response_printf(res, "%s", src_data);
+		http_response_send(res);
+		exit(0);   
+    }
     
     if (!strcasecmp(tmp_str, ".html") ||
         !strcasecmp(tmp_str, ".htm") ) 
