@@ -765,7 +765,7 @@ int wiki_init(char *portablewiki_home, int restore_WikiHelp)
 			}
 			snprintf(datadir, 512, "%s/.portablewiki", getenv("HOME"));
 #endif
-			sprintf(datadir, "./app");
+			sprintf(datadir, "./app/wiki");
 		}
 	}
 
@@ -817,6 +817,10 @@ int wiki_init(char *portablewiki_home, int restore_WikiHelp)
 
 	/* Delete previous permission list */
 	remove(ACCESSFOLDER"/.session.txt");
+
+	/* go out the datadir */
+	if (chdir("../"))
+		errorcnt++;
 
 	return 1;
 }

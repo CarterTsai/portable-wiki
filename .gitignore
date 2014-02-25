@@ -1,8 +1,6 @@
-data/
 cscope/
 portablewiki
 *.swp
-app/WikiHelp
-app/WikiHome
+app/wiki/
 autorun.sh
 *.o
