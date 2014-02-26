@@ -1,18 +1,27 @@
 'use strict';
 
 angular.module('styleApp')
-  .controller('MainCtrl', function ($scope, DB) {
+  .controller('MainCtrl', function ($scope, DB, $http) {
       $scope.isShowMenu = true;
-      
+      $scope.contents = [];
+      $scope.helpContent = "";
+      $scope.editContent = [];
+
       $('.ui.dropdown').dropdown();
       
       $scope.lists = {
           "0": {"index":"Getting Started","sub": ["WikiHome","WikiHelp"]},
           "1": {"index":"Introduction","sub": ["Who is Wiki"]}
-      }
-
-      $scope.contents = DB.get();
-
+      };
+      
+      DB.htmlGet("WikiHome", function(data) { 
+           $scope.contents.push(data);
+      });
+      
+      DB.htmlGet("WikiHelp", function(data) {
+           $scope.helpContent = data;
+      });
+ 
       $scope.title = "";
       $scope.createContent = "";
       $scope.liveContent = "";
@@ -24,7 +33,12 @@ angular.module('styleApp')
       }
 
       $scope.show = function(index) {
-         $scope.contents[index] = $(".d"+index+" > textarea").val();
+         var _tmp = $(".d"+index+" > textarea").val();
+         DB.updateWiki(_tmp, index);
+         
+         DB.htmlGet("WikiHome", function(data) { 
+           $scope.contents.push(data);
+         });
       }
 
       $scope.create = function () {
@@ -32,6 +46,9 @@ angular.module('styleApp')
       }
 
       $scope.edit = function (index) {
+          DB.wikiGet("WikiHome", function(data) {
+            $scope.editContent.push(data);
+          });
       }
       
       $scope.delete = function (index) {

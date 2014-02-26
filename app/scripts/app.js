@@ -24,11 +24,11 @@ angular.module('styleApp', [
       })
       .when('/About', {
         templateUrl: 'views/about.html',
-        controller: 'Mainctrl'
+        controller: 'MainCtrl'
       })
       .when('/Help', {
         templateUrl: 'views/help.html',
-        controller: 'Mainctrl'
+        controller: 'MainCtrl'
       })
       .otherwise({
         redirectTo: '/'
