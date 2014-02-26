@@ -34,10 +34,10 @@ angular.module('styleApp')
 
       $scope.show = function(index) {
          var _tmp = $(".d"+index+" > textarea").val();
-         DB.updateWiki(_tmp, index);
+         DB.updateWiki("WikiHome", _tmp);
          
          DB.htmlGet("WikiHome", function(data) { 
-           $scope.contents.push(data);
+           $scope.contents[index] = data;
          });
       }
 
@@ -47,7 +47,7 @@ angular.module('styleApp')
 
       $scope.edit = function (index) {
           DB.wikiGet("WikiHome", function(data) {
-            $scope.editContent.push(data);
+            $scope.editContent[0]=data;
           });
       }
       
