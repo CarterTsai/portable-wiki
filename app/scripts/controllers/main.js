@@ -11,7 +11,9 @@ angular.module('styleApp')
       
       $scope.lists = {
           "0": {"index":"Getting Started","sub": ["WikiHome","WikiHelp"]},
-          "1": {"index":"Introduction","sub": ["Who is Wiki"]}
+          "1": {"index":"Introduction","sub": ["Who is Wiki"]},
+          "2": {"index":"Introduction","sub": ["Who is Wiki"]},
+          "3": {"index":"Introduction","sub": ["Who is Wiki"]},
       };
       
       DB.htmlGet("WikiHome", function(data) { 

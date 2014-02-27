@@ -16,6 +16,16 @@ body {
 
 .left_menu {
   display: none !important;
+  position: absolute;
+  background-color: #c17161;
+  z-index: 999;
+  margin-top: 0px !important;
+  overflow: hidden;
+  overflow-y: scroll;
+  padding-top 10px !important;
+  padding-bottom: 10px !important;
+  color: #D7F3D7;
+  font-size: 18px !important;
 }
 
 .show_left_menu {
@@ -23,7 +33,7 @@ body {
 }
 
 .left_menu > .showbox {
-  overflow: hidden;
+//  overflow: hidden;
   height: 0px;
 }
 
@@ -35,6 +45,8 @@ body {
   animation-name: slidein;
   -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
+  padding-top: 20px !important;
+  padding-left: 60px !important;
 }
 
 .article {
@@ -114,7 +126,7 @@ body {
   }
 
   to {
-    height: 200px;
+    height: 400px;
   }
 }
 
@@ -124,6 +136,6 @@ body {
   }
 
   to {
-    height: 200px;
+    height: 400px;
   }
 }
