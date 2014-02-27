@@ -32,9 +32,12 @@ angular.module('styleApp')
     
     }
 
-    base.create = function(data, title) {
-        content.push(data);
-        return content;
+    base.create = function(_data, title, cb) {
+        $http({ method: "GET", 
+                url: "wiki/"+title,
+                params: {create: 'y', data: _data}
+              })
+              .success(function(data){ cb(data);});     
     }
     
     var factoryFunction = {

@@ -520,19 +520,10 @@ void wiki_handle_http_request(HttpRequest *req)
     // Handle wiki Event
     if( !strcmp(wikipath, "wiki/") ) {
 		page = page + 1;
-        
-        if (access(page, R_OK) != 0 || !strcmp(page, "wiki/"))
-        {        
-		    http_response_set_status(res, 404, "Not Found");
-    		http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
-	    	http_response_send(res);
-        }      
 		
-		int isUpdate = 0;
+        int isUpdate = 0;
 		int isCreate = 0;
         
-        char *ccc = http_request_param_get(req, "update");
-
 		if( http_request_param_get(req, "update") != NULL) { 
 		    isUpdate = 1;
         }
@@ -540,13 +531,24 @@ void wiki_handle_http_request(HttpRequest *req)
 		if( http_request_param_get(req, "create") != NULL) { 
 		    isCreate = 1;
         } 
+        
+        if(!isCreate) 
+        {
+            if (access(page, R_OK) != 0 || !strcmp(page, "wiki/"))
+            {        
+		        http_response_set_status(res, 404, "Not Found");
+    		    http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
+	    	    http_response_send(res);
+            }      		
+        }
 
         if (isUpdate || isCreate) {
 		    char *newtext = http_request_param_get(req, "data");
-
-			syslog(LOG_LOCAL0 | LOG_INFO, "page %s modified from %s", page , http_request_get_ip_src(req));
+			
+            syslog(LOG_LOCAL0 | LOG_INFO, "page %s modified from %s", page , http_request_get_ip_src(req));
 			syslog(LOG_LOCAL0 | LOG_INFO, "data : %s", newtext);
 			syslog(LOG_LOCAL0 | LOG_INFO, "page : %s", page);
+            
 			file_write(page, newtext);
 			/* log modified page name and IP address */
 		    http_response_set_status(res, 200, "OK");

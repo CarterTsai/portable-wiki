@@ -42,7 +42,10 @@ angular.module('styleApp')
       }
 
       $scope.create = function () {
-        $scope.contents = DB.create($scope.liveContent);
+           var _content = "= " + $scope.title + "\n" + $scope.createContent;
+           DB.create(_content, $scope.title, function(data) {
+                console.log("create success!!");
+           });
       }
 
       $scope.edit = function (index) {
