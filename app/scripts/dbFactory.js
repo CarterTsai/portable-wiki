@@ -4,11 +4,9 @@ angular.module('styleApp')
 .factory('DB', function($http) {
 
     var base = {};
- //   var content = ['<h1 class="ui header">Welcome to PortableWiki</h1><p>PortableWiki is a small and simple WikiWikiWeb implementation Ideal for personal note-taking, "to do" lists, and any other uses you can think of. It is fast and does not require webserver, database mng and php interpreter.For an example of how a PortableWiki entry looks in text form you can edit this page. Also see WikiHelp for infomation on usage and formatting rules. Use The WikiSandbox to experiment.</p><br>', '<h1 class="ui header">Test 2</h1><p> I wish this good UI']
-;
     var content = "";
-
     var info = {};
+    var _index = [];
 
     base.htmlGet = function(wikiname, cb) {
         $http({method: "GET", url: "html/"+wikiname})
@@ -25,11 +23,17 @@ angular.module('styleApp')
                 url: "wiki/"+wikiname,
                 params: {update: 'y', data: _data}
               })
-              .success(function(data){ cb(data);});     
+             .success(function(data){ console.log(data);});     
     }
-
-    base.list = function() {
-    
+ 
+    base.list = function(cb) {
+        if( _index.length == 0 ) {
+            $http({ method: "GET", 
+                url: "list/"
+              }).success(function(data){ _index = data; cb(data);});     
+        } else {
+            cb(_index);
+        }
     }
 
     base.create = function(_data, title, cb) {
@@ -39,11 +43,16 @@ angular.module('styleApp')
               })
               .success(function(data){ cb(data);});     
     }
+
+    base.del = function(id) {
+        console.log(_index[id]);
+    }
     
     var factoryFunction = {
         wikiGet   : base.wikiGet,
         htmlGet   : base.htmlGet,
         updateWiki : base.update,
+        getList: base.list,
         edit   : base.put,
         del    : base.del,
         create : base.create

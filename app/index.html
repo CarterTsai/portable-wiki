@@ -65,11 +65,9 @@
         <div class="left_menu column" ng-class="{show_left_menu:$parent.isShowMenu}" ng-controller="MainCtrl">
             <div class="ui ordered list showbox" ng-class="{show_menu:$parent.isShowMenu}">
                 <div ng-repeat="list in lists">
-                    <div class="item" ng-bind="list.index"></div>
-                        <div class="list">
-                            <div class="item" ng-repeat="s in list.sub" 
-                                              ng-bind="s">
-                        </div>
+                    <div class="item" ng-repeat="s in list">
+                        <a class="header" href="#/View/{{$index}}" ng-bind="s" 
+                                         ng-click="$root.isShowMenu=!$root.isShowMenu"></a>
                     </div>
                 </div>
             </div>

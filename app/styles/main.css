@@ -4,11 +4,18 @@ body {
   background-color: #ececec;
 }
 
+.item > a:hover {
+    color: #CCE2FF;
+}
+
+.item > a {
+ color: #009FDA;
+ text-decoration: none;
+}
+
 .contain {
   padding-top: 10px;
 }
-
-
 
 .container > .center {
   margin-left: 30px;
@@ -22,7 +29,7 @@ body {
   margin-top: 0px !important;
   overflow: hidden;
   overflow-y: scroll;
-  padding-top 10px !important;
+  padding-top: 10px !important;
   padding-bottom: 10px !important;
   color: #D7F3D7;
   font-size: 18px !important;
@@ -33,7 +40,7 @@ body {
 }
 
 .left_menu > .showbox {
-//  overflow: hidden;
+  overflow: hidden;
   height: 0px;
 }
 

@@ -6,16 +6,14 @@ angular.module('styleApp')
       $scope.contents = [];
       $scope.helpContent = "";
       $scope.editContent = [];
-
+      $scope.lists = [];
       $('.ui.dropdown').dropdown();
       
-      $scope.lists = {
-          "0": {"index":"Getting Started","sub": ["WikiHome","WikiHelp"]},
-          "1": {"index":"Introduction","sub": ["Who is Wiki"]},
-          "2": {"index":"Introduction","sub": ["Who is Wiki"]},
-          "3": {"index":"Introduction","sub": ["Who is Wiki"]},
-      };
-      
+
+      DB.getList(function(data){
+           $scope.lists.push(data); 
+      });  
+       
       DB.htmlGet("WikiHome", function(data) { 
            $scope.contents.push(data);
       });
