@@ -14,6 +14,10 @@ angular.module('styleApp', [
         templateUrl: 'views/create.html',
         controller: 'MainCtrl'
       })
+      .when('/View/:contentId', {
+        templateUrl: 'views/view.html',
+        controller: 'ViewCtrl'
+      })
       .when('/Index', {
         templateUrl: 'views/index.html',
         controller: 'MainCtrl'

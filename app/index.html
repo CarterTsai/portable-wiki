@@ -20,6 +20,7 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/view.js"></script>
         <script src="scripts/dbFactory.js"></script>
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/semantic-ui/packaged/javascript/semantic.js"></script>
@@ -77,6 +78,18 @@
             <div class="contain" ng-view=""></div>
         </div>
     </div>
+
+    <div class="ui modal">
+      <i class="close icon"></i>
+      <div class="header">
+        Do you Delete This Article
+      </div>
+      <div class="actions">
+        <div class="ui button cancel">Cancel</div>
+        <div class="ui button ok">OK</div>
+      </div>
+    </div>
+    
 
     <div class="footer">                                                            
         <p>PortableWiki Version: 0.3</p>                                            

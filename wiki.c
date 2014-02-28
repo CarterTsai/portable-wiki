@@ -516,6 +516,15 @@ void wiki_handle_http_request(HttpRequest *req)
 		http_response_send(res);
 		exit(0);
 	}
+    // list
+
+    if( !strcmp(wikipath, "list/") ) {
+        char cc[] = "[\"WikiHome\",\"WikiHelp\"]";
+        http_response_set_content_type(res, "application/json");
+        http_response_printf(res, "%s", cc);
+        http_response_send(res);
+        exit(0);
+    }
 
     // Handle wiki Event
     if( !strcmp(wikipath, "wiki/") ) {

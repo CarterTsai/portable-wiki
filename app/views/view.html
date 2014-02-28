@@ -1,0 +1,13 @@
+<div class="article">
+    <div class="session" ng-init="isEdit= false">
+        <div class="function">
+            <a ng-show="isEdit"><i class="icon doc basic" ng-click="show(contentId);isEdit=false"></i></a>
+            <a ng-hide="isEdit"><i class="icon edit" ng-click="edit(contentId);isEdit=true"></i></a>
+            <a><i class="icon delete" ng-click="delete(contentId)"></i></a>
+        </div>
+        <div class="content view" ng-hide="isEdit" ng-bind-html="content"></div>
+        <div class="content edit d{{contentId}}" ng-show="isEdit">
+            <textarea ng-bind-html="editContent[contentId]"></textarea>
+        </div>
+    </div>
+</div>
