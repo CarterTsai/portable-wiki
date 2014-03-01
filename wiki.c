@@ -246,11 +246,9 @@ void wiki_show_index_page_json(HttpResponse *res, char *dir)
 {
 	struct dirent **namelist;
 	int n;
-	int count_files;
 	int numvar;
     char _json[2] = {'[',']'};                                                            
 
-	count_files = 0;
 	numvar = 1;;
 	if (!dir)
 		dir = strdup(".");
@@ -270,10 +268,7 @@ void wiki_show_index_page_json(HttpResponse *res, char *dir)
 			//print link to page and page name (previous pages are not printed)
 			if (!strstr(namelist[n]->d_name, ".prev.")) {
 				http_response_printf(res, "\"%s\"", namelist[n]->d_name);
-                if(n != 1) {
-				    http_response_printf(res, ",");
-                }
-				count_files++;
+	    	    http_response_printf(res, ",");
 			}
 
 cleanup:
@@ -281,6 +276,10 @@ cleanup:
 		}
 	} //end while
 	free(namelist);
+    
+    // remove ,
+    removeOneChar(res);
+
     http_response_printf(res, "%c", _json[1]);                                            
 	http_response_send(res);
 	exit(0);

@@ -340,6 +340,11 @@ void http_response_printf_alloc_buffer(HttpResponse *res, int bytes)
 	res->data = realloc(res->data, res->data_len_alloced);
 }
 
+void removeOneChar(HttpResponse *res) {
+    res->data_len = res->data_len - 1;
+    res->data_len_alloced = res->data_len_alloced -1;
+}
+
 void http_response_printf(HttpResponse *res, const char *format, ...)
 {
 	va_list ap;

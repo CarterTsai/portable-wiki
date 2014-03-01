@@ -535,7 +535,7 @@ void wiki_print_data_as_html(HttpResponse *res, char *raw_page_data,
 				header_level++;
 				line++;
 			}
-			http_response_printf(res, "<h%d id='section%i'>", header_level, section);
+			http_response_printf(res, "<h%d class='ui header' id='section%i'>", header_level, section);
 			p = line;
 		} else if (*line == '-' && *(line + 1) == '-') { //rule
 			http_response_printf(res, "<hr/>\n");
