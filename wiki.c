@@ -35,6 +35,13 @@ static char *file_read(char *filename)
 	return str;
 }
 
+void http_response_404(HttpResponse *res) {
+      http_response_set_status(res, 404, "Not Found");                
+      http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
+      http_response_send(res);       
+      exit(0);
+}
+
 /* save wiki page */
 static int file_write(char *filename, char *data)
 {
@@ -503,9 +510,7 @@ void wiki_handle_http_request(HttpRequest *req)
     if (!strcmp(page, "/")) {
 		if (access("index.html", R_OK) != 0)
         {        
-		    http_response_set_status(res, 404, "Not Found");
-    		http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
-	    	http_response_send(res);
+            http_response_404(res);
         }      
 	//	page = "/index.html";
         tmp_str = "index.html"; 
@@ -547,9 +552,7 @@ void wiki_handle_http_request(HttpRequest *req)
         {
             if (access(page, R_OK) != 0 || !strcmp(page, "wiki/"))
             {        
-		        http_response_set_status(res, 404, "Not Found");
-    		    http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
-	    	    http_response_send(res);
+                http_response_404(res);
             }      		
         }
 
@@ -584,18 +587,14 @@ void wiki_handle_http_request(HttpRequest *req)
             
             page = page + 1; 
             if (!strcmp(page, "html/")) {        
-		        http_response_set_status(res, 404, "Not Found");
-    		    http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
-	    	    http_response_send(res);
+                http_response_404(res);
             } 
 
             page = strrchr(page, '/');
             strcat(_tmp, page);
             
             if (access(_tmp, R_OK) != 0) {        
-		        http_response_set_status(res, 404, "Not Found");
-    		    http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
-	    	    http_response_send(res);
+                http_response_404(res);
             } 
 
             src_data = file_read(_tmp);
