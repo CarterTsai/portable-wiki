@@ -241,6 +241,51 @@ cleanup:
 	return pages;
 }
 
+/* list pages, files, return json */
+void wiki_show_index_page_json(HttpResponse *res, char *dir)
+{
+	struct dirent **namelist;
+	int n;
+	int count_files;
+	int numvar;
+    char _json[2] = {'[',']'};                                                            
+
+	count_files = 0;
+	numvar = 1;;
+	if (!dir)
+		dir = strdup(".");
+	n = scandir(dir, &namelist, 0, (void *)changes_compar);
+
+	//prepare an collapsible box
+                                                                                                 
+    http_response_set_content_type(res, "application/json");                              
+    http_response_printf(res, "%c", _json[0]); 
+                                           
+	while (n--) {
+		if (namelist[n]->d_type == DT_REG) {
+			//exclude hidden and style
+			if ((namelist[n]->d_name)[0] == '.'
+			    || !strcmp(namelist[n]->d_name, "styles.css"))
+				goto cleanup;
+			//print link to page and page name (previous pages are not printed)
+			if (!strstr(namelist[n]->d_name, ".prev.")) {
+				http_response_printf(res, "\"%s\"", namelist[n]->d_name);
+                if(n != 1) {
+				    http_response_printf(res, ",");
+                }
+				count_files++;
+			}
+
+cleanup:
+			free(namelist[n]);
+		}
+	} //end while
+	free(namelist);
+    http_response_printf(res, "%c", _json[1]);                                            
+	http_response_send(res);
+	exit(0);
+}
+
 /* list pages, files */
 void wiki_show_index_page(HttpResponse *res, char *dir)
 {
@@ -521,16 +566,16 @@ void wiki_handle_http_request(HttpRequest *req)
 		http_response_send(res);
 		exit(0);
 	}
-    
-    
+   
+    // search fiel
+     
+    //if( !strcmp(wikipath, "find/") ) { 
+//		Wiki_show_search_results_page_api(res, http_request_param_get(req, "expr"));
+ //   }
     // list all of file name
     if( !strcmp(wikipath, "list/") ) {
-        
-        char cc[] = "[\"WikiHome\",\"WikiHelp\"]";
-        http_response_set_content_type(res, "application/json");
-        http_response_printf(res, "%s", cc);
-        http_response_send(res);
-        exit(0);
+       wiki_show_index_page_json(res, "./wiki");
+       exit(0);
     }
 
     // Handle wiki Event
