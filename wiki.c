@@ -492,7 +492,7 @@ void wiki_handle_http_request(HttpRequest *req)
 	char *tmp_str;
     char *src_data;
     char wikipath[6];
-    char _tmp[80] = "wiki";
+    char _tmp[80] = "wiki/";
 
     util_dehttpize(page);	/* remove any encoding on the requested page name. */
 
@@ -516,9 +516,11 @@ void wiki_handle_http_request(HttpRequest *req)
 		http_response_send(res);
 		exit(0);
 	}
-    // list
-
+    
+    
+    // list all of file name
     if( !strcmp(wikipath, "list/") ) {
+        
         char cc[] = "[\"WikiHome\",\"WikiHelp\"]";
         http_response_set_content_type(res, "application/json");
         http_response_printf(res, "%s", cc);
@@ -575,21 +577,38 @@ void wiki_handle_http_request(HttpRequest *req)
     }
     // Handle Data to HTML
     if( !strcmp(wikipath, "html/") ) {
-        page = strrchr(page, '/');
-        strcat(_tmp, page);
+        
+        char *previewText = http_request_param_get(req, "preview");
 
-        if (access(_tmp, R_OK) != 0 || !strcmp(page, "html/"))
-        {        
-		    http_response_set_status(res, 404, "Not Found");
-    		http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
-	    	http_response_send(res);
-        }      
-   
-        src_data = file_read(_tmp);
-        http_response_printf_alloc_buffer(res, strlen(src_data) * 2);
-        wiki_print_data_as_html(res, src_data, page);
-		http_response_send(res);
-        exit(0);
+        if(previewText == NULL) {
+            
+            page = page + 1; 
+            if (!strcmp(page, "html/")) {        
+		        http_response_set_status(res, 404, "Not Found");
+    		    http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
+	    	    http_response_send(res);
+            } 
+
+            page = strrchr(page, '/');
+            strcat(_tmp, page);
+            
+            if (access(_tmp, R_OK) != 0) {        
+		        http_response_set_status(res, 404, "Not Found");
+    		    http_response_printf(res, "<html><body>404 Not Found</body></html>\n");
+	    	    http_response_send(res);
+            } 
+
+            src_data = file_read(_tmp);
+            http_response_printf_alloc_buffer(res, strlen(src_data) * 2);
+            wiki_print_data_as_html(res, src_data, page);
+		    http_response_send(res);
+            exit(0);
+        } else {
+            http_response_printf_alloc_buffer(res, strlen(previewText) * 2);
+            wiki_print_data_as_html(res, previewText, page);
+		    http_response_send(res);
+            exit(0); 
+        }
     }
     
     if (!strcasecmp(tmp_str, ".html") ||

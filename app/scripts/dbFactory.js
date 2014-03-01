@@ -47,6 +47,16 @@ angular.module('styleApp')
     base.del = function(id) {
         console.log(_index[id]);
     }
+
+    base.preview = function(content, cb) {
+    
+        $http({ method: "GET", 
+                url: "html/",
+                params: {preview: content}
+              })
+              .success(function(html){ cb(html);});     
+    
+    }
     
     var factoryFunction = {
         wikiGet   : base.wikiGet,
@@ -55,7 +65,8 @@ angular.module('styleApp')
         getList: base.list,
         edit   : base.put,
         del    : base.del,
-        create : base.create
+        create : base.create,
+        preview: base.preview
     };
     return factoryFunction;
 });

@@ -7,6 +7,10 @@ angular.module('styleApp')
       $scope.helpContent = "";
       $scope.editContent = [];
       $scope.lists = [];
+      $scope.title = "";
+      $scope.createContent = "";
+      $scope.liveContent = "";
+      
       $('.ui.dropdown').dropdown();
       
 
@@ -20,16 +24,13 @@ angular.module('styleApp')
       
       DB.htmlGet("WikiHelp", function(data) {
            $scope.helpContent = data;
-      });
- 
-      $scope.title = "";
-      $scope.createContent = "";
-      $scope.liveContent = "";
+      }); 
       
       $scope.Preview = function() {
-         $scope.liveContent = '<h1 class="ui header">' +
-                                $scope.title + '</h1><p>'+
-                                $scope.createContent+'</p>'; 
+        var _content  = "="+ $scope.title +"\n" + $scope.createContent;
+         DB.preview(_content ,function (html) { 
+             $scope.liveContent = html;
+         });
       }
 
       $scope.show = function(index) {
