@@ -43,14 +43,14 @@
             <a href="" ng-click="$parent.isShowMenu=!$parent.isShowMenu" class="item icon">
                 <i class="ordered list icon"></i> Index
             </a>
-            <a href="#/Create" class="item icon"><i class="plus icon"></i> Create</a>
+            <a href="#/Create" ng-click="$parent.isShowMenu=false" class="item icon"><i class="plus icon"></i> Create</a>
             <div class="ui mini icon input search_offset">
                 <input type="text" placeholder="Search ...">
                 <i class="search icon"></i>
             </div>
             <div class="right menu">
                 <div class="ui icon top right pointing dropdown item">
-                  <i class="settings icon"></i>
+                  <i class="settings icon" ng-click="$parent.isShowMenu=false"></i>
                   <div class="menu">
                     <a href="#/Changes" class="icon item"><i class="info icon"></i>Changes</a>
                     <a href="#/Help" class="item"><i class="help icon"></i>Help</a>

@@ -26,6 +26,12 @@ angular.module('styleApp')
              .success(function(data){ console.log(data);});     
     }
  
+    base.updateList = function(cb) {
+        $http({ method: "GET", 
+                url: "list/"
+              }).success(function(data){ _index = data; cb(data);});     
+    }
+    
     base.list = function(cb) {
         if( _index.length == 0 ) {
             $http({ method: "GET", 
@@ -63,6 +69,7 @@ angular.module('styleApp')
         htmlGet   : base.htmlGet,
         updateWiki : base.update,
         getList: base.list,
+        updateList: base.updateList,
         edit   : base.put,
         del    : base.del,
         create : base.create,

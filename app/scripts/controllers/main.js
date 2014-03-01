@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('styleApp')
-  .controller('MainCtrl', function ($scope, DB, $http) {
+  .controller('MainCtrl', function ($scope, DB, $http, $location) {
       $scope.isShowMenu = true;
       $scope.contents = [];
       $scope.helpContent = "";
@@ -44,8 +44,13 @@ angular.module('styleApp')
 
       $scope.create = function () {
            var _content = "= " + $scope.title + "\n" + $scope.createContent;
-           DB.create(_content, $scope.title, function(data) {
+           DB.create(_content, $scope.title, function(data) { 
                 console.log("create success!!");
+                DB.updateList(function(data){
+                    console.log("updateList");
+                    $scope.lists.push(data);
+                    $location.path("/");
+                });  
            });
       }
 

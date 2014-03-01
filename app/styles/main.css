@@ -27,7 +27,6 @@ body {
   background-color: #c17161;
   z-index: 999;
   margin-top: 0px !important;
-  overflow: hidden;
   overflow-y: scroll;
   padding-top: 10px !important;
   padding-bottom: 10px !important;
@@ -40,7 +39,6 @@ body {
 }
 
 .left_menu > .showbox {
-  overflow: hidden;
   height: 0px;
 }
 
