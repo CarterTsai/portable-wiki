@@ -1,0 +1,81 @@
+table.wikitable { background-color: #fff; border: 1px solid #aaa; }
+table.wikitable td { background-color: #fff; border: 1px solid #aaa; }
+
+pre {
+    font-family: monospace;
+    background-color: #eee;
+    padding: 2px;
+    padding-left: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    line-height: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+hr {
+ height: 1px;
+ color: #aaaaaa;
+ background-color: #aaaaaa;
+ border: 0;
+ margin: 0.2em 5px 0.2em 5px;
+}
+
+form {
+    border: none;
+    margin: 0;
+}
+
+textarea {
+    border: 1px solid #aaaaaa;
+    color: Black;
+    background-color: white;
+    width: 100%;
+    padding: 0.1em;
+    overflow: auto;
+}
+
+.function > a, ulink {
+    border-bottom: 1px !important;     
+}
+
+.session a, ulink{
+   color: #333 ;
+   text-decoration:none;
+   border-bottom: 1px #333 dotted;
+   display: inline;
+ }
+
+.session  a:hover {
+   color: #333;
+   text-decoration: None;
+   border-bottom: 1px #000 solid;
+   }
+
+.session a:visited {
+   color: #333;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 1.8em;
+}
+
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+
+hr {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+table {
+    display: table;
+    margin-bottom: 20px !important;
+}
+
+td {
+    padding: 5px 5px 5px 5px;
+}
