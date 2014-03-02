@@ -5,7 +5,7 @@ body {
 }
 
 .item > a:hover {
-    color: #CCE2FF;
+ color: #CCE2FF;
 }
 
 .item > a {
@@ -32,6 +32,18 @@ body {
   padding-bottom: 10px !important;
   color: #D7F3D7;
   font-size: 18px !important;
+  position: fixed;
+  z-index: 999;
+  margin: 0em;
+}
+
+.left_menu_footer {
+  font-size: 40px;
+  padding-left: 50%;
+}
+
+.left_menu_footer  i:hover {
+  color: white;
 }
 
 .show_left_menu {
