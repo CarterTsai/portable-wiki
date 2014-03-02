@@ -849,22 +849,22 @@ line_content:
 				bgcolor_k = *(line + 1);
 				switch (bgcolor_k) {
 				case 'R':
-					strcpy(color_str, "<SPAN STYLE=\"background: #FF0000\">");
+					strcpy(color_str, "<SPAN class=\"R\">");
 					break;
 				case 'G':
-					strcpy(color_str, "<SPAN STYLE=\"background: #00FF00\">");
+					strcpy(color_str, "<SPAN class=\"G\">");
 					break;
 				case 'B':
-					strcpy(color_str, "<SPAN STYLE=\"background: #0000FF\">");
+					strcpy(color_str, "<SPAN class=\"B\">");
 					break;
 				case 'Y':
-					strcpy(color_str, "<SPAN STYLE=\"background: #FFFF00\">");
+					strcpy(color_str, "<SPAN class=\"Y\">");
 					break;
 				case 'P':
-					strcpy(color_str, "<SPAN STYLE=\"background: #FF00FF\">");
+					strcpy(color_str, "<SPAN class=\"P\">");
 					break;
 				case 'C':
-					strcpy(color_str, "<SPAN STYLE=\"background: #00FFFF\">");
+					strcpy(color_str, "<SPAN class=\"C\">");
 					break;
 				}
 
@@ -911,7 +911,7 @@ line_content:
 				}
 
 				*line = '\0';
-				http_response_printf(res, "%s%s\n", p, highlight_on ? "</SPAN>" : "<SPAN STYLE=\"background: #FFFF00\">");
+				http_response_printf(res, "%s%s\n", p, highlight_on ? "</SPAN>" : "<SPAN class=\"highlight\">");
 				highlight_on ^= 1; /* switch flag */
 				p = line + 1;
 			} else if (*line == '*') {

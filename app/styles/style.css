@@ -79,3 +79,25 @@ table {
 td {
     padding: 5px 5px 5px 5px;
 }
+
+.highlight {
+    background: #FFFF00;
+}
+.R {
+    background: #FF0000;
+}
+.G {
+    background: #00FF00;
+}
+.B {
+    background: #0000FF;
+}
+.Y {
+    background: #FFFF00;
+}
+.P {
+    background: #FF00FF;
+}
+.C {
+    background: #00FFFF;
+}
