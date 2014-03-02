@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('styleApp')
-  .controller('MainCtrl', function ($scope, DB, $http, $location) {
+  .controller('MainCtrl', function ($rootScope,$scope, DB, $http, $location) {
       $scope.isShowMenu = true;
       $scope.contents = [];
       $scope.helpContent = "";
       $scope.editContent = [];
-      $scope.lists = [];
+      $rootScope.lists = [];
       $scope.title = "";
       $scope.createContent = "";
       $scope.liveContent = "";
@@ -14,7 +14,7 @@ angular.module('styleApp')
       $('.ui.dropdown').dropdown();
       
       DB.getList(function(data){
-            $scope.lists.push(data); 
+            $rootScope.lists.push(data); 
       });  
     
       DB.htmlGet("WikiHome", function(data) { 
@@ -46,8 +46,8 @@ angular.module('styleApp')
            DB.create(_content, $scope.title, function(data) { 
                 console.log("create success!!");
                 DB.updateList(function(data){
-                    console.log("updateList");
-                    $scope.lists.push(data);
+                    $rootScope.lists = [];
+                    $rootScope.lists.push(data);
                     $location.path("/");
                 });  
            });
