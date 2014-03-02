@@ -13,15 +13,15 @@ angular.module('styleApp')
       
       $('.ui.dropdown').dropdown();
       
-
       DB.getList(function(data){
-           $scope.lists.push(data); 
+            $scope.lists.push(data); 
+            for (var i=0; i < data.length; i++) {      
+                DB.htmlGet(data[i], function(data) { 
+                    $scope.contents.push(data);
+                });
+            }
       });  
        
-      DB.htmlGet("WikiHome", function(data) { 
-           $scope.contents.push(data);
-      });
-      
       DB.htmlGet("WikiHelp", function(data) {
            $scope.helpContent = data;
       }); 
