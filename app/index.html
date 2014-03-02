@@ -69,7 +69,7 @@
             <div class="ui ordered list showbox" ng-class="{show_menu:$parent.isShowMenu}">
                 <div ng-repeat="list in lists">
                     <div class="item" ng-repeat="s in list">
-                        <a class="header" href="#/View/{{$index}}" ng-bind="s" 
+                        <a class="header" href="#/View/{{s}}" ng-bind="s" 
                                          ng-click="$root.isShowMenu=!$root.isShowMenu"></a>
                     </div>
                 </div>

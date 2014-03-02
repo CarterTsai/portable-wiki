@@ -11,14 +11,14 @@ angular.module('styleApp')
       
       DB.getList(function(data){
          $scope.lists = data;
-         DB.htmlGet(data[$scope.contentId], function(data) { 
+         DB.htmlGet($scope.contentId, function(data) { 
             $scope.content = data;
         });
       }); 
        
       $scope.show = function(index) {
          var _tmp = $(".d"+index+" > textarea").val();
-         DB.updateWiki($scope.lists[index], _tmp, function(data){
+         DB.updateWiki($scope.contentId, _tmp, function(data){
             DB.preview(_tmp, function(html) { 
                 $scope.content = html;
             });
@@ -27,8 +27,7 @@ angular.module('styleApp')
       }
 
       $scope.edit = function (index) {
-          console.log($scope.lists[index]);
-          DB.wikiGet($scope.lists[index], function(data) {
+          DB.wikiGet($scope.contentId, function(data) {
             $scope.editContent[index]=data;
           });
       }
