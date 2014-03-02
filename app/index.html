@@ -40,18 +40,20 @@
     
     <div class = "ui fixed transparent main menu" ng-init="isShowMenu=true" ng-controller="MainCtrl">
         <div class="container">
-            <a href="/" class="launch item" ng-click="$parent.isShowMenu=false"><i class="icon home"></i> PortableWiki </a>
+            <a href="/" class="launch item" ng-click="$parent.isShowMenu=false"><i class="icon large home"></i> PortableWiki </a>
             <a href="" ng-click="$parent.isShowMenu=!$parent.isShowMenu" class="item icon">
-                <i class="ordered list icon"></i> Index
+                <i class="ordered list large icon"></i> Index
             </a>
-            <a href="#/Create" ng-click="$parent.isShowMenu=false" class="item icon"><i class="plus icon"></i> Create</a>
+            <a href="#/Create" ng-click="$parent.isShowMenu=false" class="item icon">
+                <i class="plus large icon"></i> Create
+            </a>
             <div class="ui mini icon input search_offset">
                 <input type="text" placeholder="Search ...">
                 <i class="search icon"></i>
             </div>
             <div class="right menu">
                 <div class="ui icon top right pointing dropdown item">
-                  <i class="settings icon" ng-click="$root.isShowMenu=false"></i>
+                  <i class="settings large icon" ng-click="$root.isShowMenu=false"></i>
                   <div class="menu">
                     <a href="#/Changes" class="icon item"><i class="info icon"></i>Changes</a>
                     <a href="#/Help" class="item"><i class="help icon"></i>Help</a>
