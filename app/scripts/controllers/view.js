@@ -19,8 +19,8 @@ angular.module('styleApp')
       $scope.show = function(index) {
          var _tmp = $(".d"+index+" > textarea").val();
          DB.updateWiki($scope.lists[index], _tmp );
-         
-         DB.htmlGet($scope.lists[index], function(data) { 
+        
+         DB.preview(_tmp, function(data) { 
            $scope.content = data;
          });
       }
