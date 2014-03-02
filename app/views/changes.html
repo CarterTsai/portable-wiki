@@ -1,23 +1,7 @@
 <div class="article">
     <div class="session">
-        <div class="ui list">
-            <div class="item">  
-                <i class="time red outline icon"></i>
-                <div class="content"> 
-                    <div class="header"> WikiHelp 2014-02-15 21:54</div>
-                </div>
-            </div>
-            <div class="item"> 
-                <i class="time red outline  icon"></i>
-                <div class="content"> 
-                <div class="header"> WikiHome 2014-02-15 21:54 </div>
-                </div>
-            </div>
-            <div class="item">
-                <i class="info green outline  icon"></i>
-                <div class="content"> 
-                <div class="header"> wiki changes are also available as a RSS feed.<div>
-            </div>
+        <div ng-repeat ="c in $root.diff">
+            <div ng-bind-html="c"></div>
         </div>
     </div>
 </div>

@@ -578,6 +578,20 @@ void wiki_handle_http_request(HttpRequest *req)
     }
 
     // Handle wiki Event
+    if( !strcmp(wikipath, "diff") ) {
+        chdir("./wiki");
+		if ((page = http_request_param_get(req, "diff1")))
+			wiki_show_diff_between_pages(res, page, 1);
+		else if ((page = http_request_param_get(req, "diff2")))
+			wiki_show_diff_between_pages(res, page, 2);
+		else
+			wiki_show_changes_page(res);
+        
+        chdir("../");
+        exit(0);
+    }
+
+    // Handle wiki Event
     if( !strcmp(wikipath, "wiki/") ) {
 		page = page + 1;
 		

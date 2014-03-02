@@ -61,7 +61,13 @@ angular.module('styleApp')
                 params: {preview: content}
               })
               .success(function(html){ cb(html);});     
-    
+    }
+
+    base.change = function (cb){
+        $http({ method: "GET", 
+                url: "diff"
+              })
+              .success(function(html){cb(html);});      
     }
     
     var factoryFunction = {
@@ -73,7 +79,8 @@ angular.module('styleApp')
         edit   : base.put,
         del    : base.del,
         create : base.create,
-        preview: base.preview
+        preview: base.preview,
+        change : base.change
     };
     return factoryFunction;
 });

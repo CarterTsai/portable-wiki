@@ -10,10 +10,12 @@ angular.module('styleApp')
       $scope.title = "";
       $scope.createContent = "";
       $scope.liveContent = "";
-      
+      $rootScope.diff = [];
+
       $('.ui.dropdown').dropdown();
       
       DB.getList(function(data){
+            $rootScope.lists = [];
             $rootScope.lists.push(data); 
       });  
     
@@ -24,6 +26,11 @@ angular.module('styleApp')
       DB.htmlGet("WikiHelp", function(data) {
            $scope.helpContent = data;
       }); 
+      
+      DB.change( function(data) {
+           $rootScope.diff = [];
+           $rootScope.diff.push(data);
+      });    
       
       $scope.Preview = function() {
         var _content  = "="+ $scope.title +"\n" + $scope.createContent;
@@ -58,7 +65,15 @@ angular.module('styleApp')
             $scope.editContent[0]=data;
           });
       }
-      
+
+      $scope.changes = function () {
+          console.log("changes");
+          DB.change( function(data) {
+              $rootScope.diff = [];
+              $rootScope.diff.push(data);
+          });    
+      }
+
       $scope.delete = function (index) {
           $('.ui.modal')
               .modal('setting', {

@@ -10,13 +10,14 @@ void wiki_show_changes_page(HttpResponse *res)
 	int *table, *done; //alloc mem with n_pages
 	char *str_ptr;
 
-	wiki_show_header(res, "Changes", FALSE);
+//	wiki_show_header(res, "Changes", FALSE);
 
 	pages = wiki_get_pages(&n_pages, NULL);
 
 	table = malloc((1 + n_pages) * sizeof(int));
 	done = malloc((1 + n_pages) * sizeof(int));
-
+    
+    http_response_set_content_type(res, "text/html");
 	/* regroup file and previous file */
 	for (i = 0; i < n_pages + 1; i++) {
 		done[i] = 0;
@@ -47,8 +48,8 @@ void wiki_show_changes_page(HttpResponse *res)
 		if (strstr(pages[i]->name, ".prev.1")) {
 			strcpy(spacing, "&nbsp;&nbsp;");
 			lg = asprintf(&difflink,
-			              "<a href='Changes?diff1=%s'>diff</a>\n"
-			              "<a href='Changes?diff2=%s'>comp</a>\n",
+			              "<a href='diff?diff1=%s'>diff</a>\n"
+			              "<a href='diff?diff2=%s'>comp</a>\n",
 			              pages[i]->name, pages[i]->name);
 		} else {
 			*spacing = '\0';
@@ -56,7 +57,7 @@ void wiki_show_changes_page(HttpResponse *res)
 		}
 		pTm = localtime(&pages[i]->mtime);
 		strftime(datebuf, sizeof(datebuf), "%Y-%m-%d %H:%M", pTm);
-		http_response_printf(res, "%s<a href='%s'>%s</a> %s %s<br />\n",
+		http_response_printf(res, "%s<a href=/#/View/%s>%s</a> %s %s<br />\n",
 		                     spacing,
 		                     pages[i]->name,
 		                     pages[i]->name,
@@ -67,7 +68,7 @@ void wiki_show_changes_page(HttpResponse *res)
 	http_response_printf(res, "<p>Wiki changes are also available as a "
 	                     "<a href='ChangesRss'>RSS</a> feed.\n");
 
-	wiki_show_footer(res);
+//	wiki_show_footer(res);
 	http_response_send(res);
 	free(table);
 	free(done);
@@ -92,7 +93,7 @@ void wiki_show_diff_between_pages(HttpResponse *res, char *page, int mode)
 	fp = fopen(page, "r");
 	lg = asprintf(&cmd, "diff -abB %s %s", page, current);
 
-	wiki_show_header(res, "Changes", FALSE);
+//	wiki_show_header(res, "Changes", FALSE);
 
 	FILE *pipe = popen(cmd, "r");
 	if (!pipe)
@@ -149,7 +150,7 @@ void wiki_show_diff_between_pages(HttpResponse *res, char *page, int mode)
 	pclose(pipe);
 	fclose(fp);
 
-	wiki_show_footer(res);
+//	wiki_show_footer(res);
 	http_response_send(res);
 	exit(0);
 }

@@ -17,13 +17,13 @@
         <link rel="stylesheet" href="styles/reset.css">
         <link rel="stylesheet" href="styles/style.css">
         <!-- endbuild -->
-        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular/angular.min.js"></script>
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/view.js"></script>
         <script src="scripts/dbFactory.js"></script>
-        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/semantic-ui/packaged/javascript/semantic.js"></script>
         <!-- endbuild -->
 </head>
@@ -55,7 +55,7 @@
                 <div class="ui icon top right pointing dropdown item">
                   <i class="settings large icon" ng-click="$root.isShowMenu=false"></i>
                   <div class="menu">
-                    <a href="#/Changes" class="icon item"><i class="info icon"></i>Changes</a>
+                    <a href="#/Changes" class="icon item" ng-click="changes()"><i class="info icon"></i>Changes</a>
                     <a href="#/Help" class="item"><i class="help icon"></i>Help</a>
                     <a href="#/About" class="item"><i class="user icon"></i>About</a>
                   </div>
@@ -101,8 +101,8 @@
     </div>   
 
         <!-- build:js scripts/modules.js -->
-        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-        <script src="bower_components/angular-route/angular-route.js"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+        <script src="bower_components/angular-route/angular-route.min.js"></script>
         <!-- endbuild -->
     
 </body>
