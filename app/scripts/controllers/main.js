@@ -15,12 +15,11 @@ angular.module('styleApp')
       
       DB.getList(function(data){
             $scope.lists.push(data); 
-            for (var i=0; i < data.length; i++) {      
-                DB.htmlGet(data[i], function(data) { 
-                    $scope.contents.push(data);
-                });
-            }
       });  
+    
+      DB.htmlGet("WikiHome", function(data) { 
+            $scope.contents.push(data);
+      });
        
       DB.htmlGet("WikiHelp", function(data) {
            $scope.helpContent = data;
@@ -35,11 +34,11 @@ angular.module('styleApp')
 
       $scope.show = function(index) {
          var _tmp = $(".d"+index+" > textarea").val();
-         DB.updateWiki("WikiHome", _tmp);
-         
-         DB.htmlGet("WikiHome", function(data) { 
-           $scope.contents[index] = data;
-         });
+         DB.updateWiki("WikiHome", _tmp, function(data){
+            DB.htmlGet("WikiHome", function(html) { 
+                $scope.contents[index] = html ;
+            });
+         });   
       }
 
       $scope.create = function () {

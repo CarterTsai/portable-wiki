@@ -18,11 +18,12 @@ angular.module('styleApp')
        
       $scope.show = function(index) {
          var _tmp = $(".d"+index+" > textarea").val();
-         DB.updateWiki($scope.lists[index], _tmp );
-        
-         DB.preview(_tmp, function(data) { 
-           $scope.content = data;
+         DB.updateWiki($scope.lists[index], _tmp, function(data){
+            DB.preview(_tmp, function(html) { 
+                $scope.content = html;
+            });
          });
+        
       }
 
       $scope.edit = function (index) {

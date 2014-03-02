@@ -18,12 +18,12 @@ angular.module('styleApp')
               .success(function(data){ cb(data);});     
     } 
 
-    base.update = function(wikiname, _data) {    
+    base.update = function(wikiname, _data, cb) {    
         $http({ method: "GET", 
                 url: "wiki/"+wikiname,
                 params: {update: 'y', data: _data}
               })
-             .success(function(data){ console.log(data);});     
+             .success(function(data){ cb(data);});     
     }
  
     base.updateList = function(cb) {
