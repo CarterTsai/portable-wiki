@@ -11,6 +11,8 @@ pre {
     line-height: 15px;
     padding-top: 10px;
     padding-bottom: 10px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
 }
 
 hr {
@@ -71,6 +73,20 @@ hr {
     margin-bottom: 10px;
 }
 
+code {
+    margin: 0;
+    border: none;
+    word-wrap: normal;
+    max-width: initial;
+    display: inline;
+    overflow: initial;
+    line-height: inherit;
+    background-color: #ccc;
+    padding: 2px 3px 2px 3px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
 table {
     display: table;
     margin-bottom: 20px !important;
@@ -80,17 +96,27 @@ td {
     padding: 5px 5px 5px 5px;
 }
 
+b {
+    font-weight: bold;
+}
+
+i {
+    font-style: italic;
+}
+
 .highlight {
     background: #FFFF00;
 }
 .R {
     background: #FF0000;
+    color: white;
 }
 .G {
     background: #00FF00;
 }
 .B {
     background: #0000FF;
+    color: white;
 }
 .Y {
     background: #FFFF00;
@@ -100,4 +126,9 @@ td {
 }
 .C {
     background: #00FFFF;
+}
+.R .G .B {
+    padding: 2px 3px 2px 3px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
 }
