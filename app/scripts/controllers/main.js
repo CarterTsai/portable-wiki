@@ -74,18 +74,18 @@ angular.module('styleApp')
           });    
       }
 
-      $scope.delete = function (index) {
+      $scope.delete = function (name) {
           $('.ui.modal')
               .modal('setting', {
                    closable  : false,
                    onDeny    : function(){
                    },
                    onApprove : function() {
-                     $scope.$apply(function() {
-                        $scope.contents.splice(index ,1);
-                        if($scope.contents.length == 0)
-                            $scope.contents = [""];
-                     })
+                       $scope.$apply(function() {
+                            DB.del(name, function() {
+                                $location.path("/");
+                            });
+                       });
                    }
                  })
               .modal('show');

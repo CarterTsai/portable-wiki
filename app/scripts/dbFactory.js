@@ -50,8 +50,13 @@ angular.module('styleApp')
               .success(function(data){ cb(data);});     
     }
 
-    base.del = function(id) {
-        console.log(_index[id]);
+    base.del = function(name ,cb) {
+        
+        $http({ method: "GET", 
+                url: "wiki/"+name,
+                params: {delete: 'y', confirm: 'yes'}
+              })
+              .success(function(data){ cb(data);});     
     }
 
     base.preview = function(content, cb) {

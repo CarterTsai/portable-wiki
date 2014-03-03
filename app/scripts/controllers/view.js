@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('styleApp')
-  .controller('ViewCtrl', function ($scope, DB, $http , $routeParams) {
+  .controller('ViewCtrl', function ($scope, DB, $http ,$routeParams, $location) {
       $scope.isShowMenu = true;
       $scope.content = "";
       $scope.editContent = [];
@@ -32,7 +32,7 @@ angular.module('styleApp')
           });
       }
       
-      $scope.delete = function (index) {
+      $scope.delete = function (name) {
           $('.ui.modal')
               .modal('setting', {
                    closable  : false,
@@ -40,8 +40,13 @@ angular.module('styleApp')
                    },
                    onApprove : function() {
                      $scope.$apply(function() {
-                        DB.del(index);
-                        $scope.content = "";
+                        DB.del(name, function(){
+                          DB.updateList(function(data){                                   
+                             $scope.lists = [];                                      
+                             $scope.lists.push(data);                                
+                             $location.path("/");                                        
+                          });                 
+                        });
                      })
                    }
                  })

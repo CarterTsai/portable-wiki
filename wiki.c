@@ -597,6 +597,7 @@ void wiki_handle_http_request(HttpRequest *req)
 		
         int isUpdate = 0;
 		int isCreate = 0;
+		int isDelete = 0;
         
 		if( http_request_param_get(req, "update") != NULL) { 
 		    isUpdate = 1;
@@ -605,6 +606,21 @@ void wiki_handle_http_request(HttpRequest *req)
 		if( http_request_param_get(req, "create") != NULL) { 
 		    isCreate = 1;
         } 
+		
+        if( http_request_param_get(req, "delete") != NULL) { 
+            char *confirm = http_request_param_get(req, "confirm");
+            if( !strcmp(confirm, "yes") ) { 
+                if ( access(page, R_OK) == -1 ) {        
+                    http_response_404(res);
+                    exit(0);
+                }        		
+				unlink(page);
+		        http_response_set_status(res, 200, "OK");
+                http_response_set_content_type(res, "text/html");
+		        http_response_printf(res, "Your Are Detele %s", page);
+    	    	http_response_send(res);
+            }
+        }
         
         if(!isCreate) 
         {
