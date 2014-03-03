@@ -41,14 +41,14 @@ textarea {
     border-bottom: 1px !important;     
 }
 
-.session a, ulink{
+.content a, ulink{
    color: #333 ;
    text-decoration:none;
    border-bottom: 1px #333 dotted;
    display: inline;
  }
 
-.session  a:hover {
+.content > a:hover {
    color: #333;
    text-decoration: None;
    border-bottom: 1px #000 solid;
