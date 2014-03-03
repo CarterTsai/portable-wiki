@@ -338,6 +338,41 @@ cleanup:
 	exit(0);
 }
 
+void wiki_show_search_results_json(HttpResponse *res, char *expr)
+{
+	WikiPageList **pages = NULL;
+	int            n_pages, i;
+
+	if (expr == NULL || strlen(expr) == 0) {
+		http_response_printf(res, "No Search Terms supplied");
+		http_response_send(res);
+		exit(0);
+	}
+
+	pages = wiki_get_pages(&n_pages, expr);
+    http_response_set_content_type(res, "application/json");
+    http_response_printf(res, "%c", '[');
+    http_response_printf(res, "%c", '{');
+    http_response_printf(res, "%s", "\"data\":[");
+	if (pages) {
+		for (i = 0; i < n_pages; i++) {
+			http_response_printf(res, "\"%s\",", pages[i]->name);
+		}
+        // remove ,
+        removeOneChar(res);
+        http_response_printf(res, "%s", "]}");
+	    http_response_printf(res, ",{\"status\":\"ok\"}");
+	} else {
+		http_response_printf(res, "\"status\":\"no match\"");
+	}
+
+    http_response_printf(res, "%c", ']');
+	http_response_send(res);
+
+	exit(0);
+}
+
+
 void wiki_show_search_results_page(HttpResponse *res, char *expr)
 {
 	WikiPageList **pages = NULL;
@@ -568,9 +603,11 @@ void wiki_handle_http_request(HttpRequest *req)
    
     // search fiel
      
-    //if( !strcmp(wikipath, "find/") ) { 
-//		Wiki_show_search_results_page_api(res, http_request_param_get(req, "expr"));
- //   }
+    if( !strcmp(wikipath, "find") ) { 
+        chdir("./wiki"); 
+		wiki_show_search_results_json(res, http_request_param_get(req, "expr"));
+    }
+
     // list all of file name
     if( !strcmp(wikipath, "list/") ) {
        wiki_show_index_page_json(res, "./wiki");
