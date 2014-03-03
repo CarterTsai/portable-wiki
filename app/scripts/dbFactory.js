@@ -10,7 +10,10 @@ angular.module('styleApp')
 
     base.htmlGet = function(wikiname, cb) {
         $http({method: "GET", url: "html/"+wikiname})
-              .success(function(data){ cb(data);});     
+              .success(function(data, status){ cb(data);}) 
+              .error(function(data, status, headers, config) {
+                  cb(data, status);
+              });
     } 
     
     base.wikiGet = function(wikiname, cb) {
@@ -23,20 +26,31 @@ angular.module('styleApp')
                 url: "wiki/"+wikiname,
                 params: {update: 'y', data: _data}
               })
-             .success(function(data){ cb(data);});     
+             .success(function(data, status){ cb(data, status);}) 
+             .error(function(data, status, headers, config) {
+                  cb(data, status);
+              });
     }
  
     base.updateList = function(cb) {
         $http({ method: "GET", 
                 url: "list/"
-              }).success(function(data){ _index = data; cb(data);});     
+              })
+             .success(function(data, status){ _index = data; cb(data, status);}) 
+             .error(function(data, status, headers, config) {
+                  cb(data, status);
+              });
     }
     
     base.list = function(cb) {
         if( _index.length == 0 ) {
             $http({ method: "GET", 
                 url: "list/"
-              }).success(function(data){ _index = data; cb(data);});     
+              })
+             .success(function(data, status){ _index = data; cb(data, status);})
+             .error(function(data, status, headers, config) {
+                  cb(data, status);
+              });
         } else {
             cb(_index);
         }
@@ -47,7 +61,10 @@ angular.module('styleApp')
                 url: "wiki/"+title,
                 params: {create: 'y', data: _data}
               })
-              .success(function(data){ cb(data);});     
+             .success(function(data, status){ cb(data, status);})
+             .error(function(data, status, headers, config) {
+                  cb(data, status);
+              });
     }
 
     base.del = function(name ,cb) {
@@ -56,7 +73,10 @@ angular.module('styleApp')
                 url: "wiki/"+name,
                 params: {delete: 'y', confirm: 'yes'}
               })
-              .success(function(data){ cb(data);});     
+             .success(function(data, status){ cb(data, status);})
+             .error(function(data, status, headers, config) {
+                  cb(data, status);
+              });
     }
 
     base.preview = function(content, cb) {
@@ -65,14 +85,20 @@ angular.module('styleApp')
                 url: "html/",
                 params: {preview: content}
               })
-              .success(function(html){ cb(html);});     
+             .success(function(html, status){ cb(html, status);})
+             .error(function(data, status, headers, config) {
+                  cb(data, status);
+              });
     }
 
     base.change = function (cb){
         $http({ method: "GET", 
                 url: "diff"
               })
-              .success(function(html){cb(html);});      
+             .success(function(html, status){cb(html, status);})      
+             .error(function(data, status, headers, config) {
+                  cb(data, status);
+              });
     }
     
     var factoryFunction = {

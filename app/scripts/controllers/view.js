@@ -11,8 +11,12 @@ angular.module('styleApp')
       
       DB.getList(function(data){
          $scope.lists = data;
-         DB.htmlGet($scope.contentId, function(data) { 
-            $scope.content = data;
+         DB.htmlGet($scope.contentId, function(data, status) { 
+            if (status != 404) {
+                $scope.content = data;
+            } else {
+                 $location.path('/');
+            }
         });
       }); 
        
@@ -40,12 +44,12 @@ angular.module('styleApp')
                    },
                    onApprove : function() {
                      $scope.$apply(function() {
-                        DB.del(name, function(){
-                          DB.updateList(function(data){                                   
+                        DB.del(name, function(data, status) {
+                          DB.updateList(function(data) {
                              $scope.lists = [];                                      
                              $scope.lists.push(data);                                
                              $location.path("/");                                        
-                          });                 
+                          });
                         });
                      })
                    }
