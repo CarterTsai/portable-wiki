@@ -23,6 +23,7 @@
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/view.js"></script>
         <script src="scripts/controllers/search.js"></script>
+        <script src="scripts/directives/repeatFinish.js"></script>
         <script src="scripts/dbFactory.js"></script>
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/semantic-ui/packaged/javascript/semantic.js"></script>
@@ -97,7 +98,7 @@
     </div>
     
 
-    <div class="footer">                                                            
+    <div class="footer" ng-init="$roor.repeatHide=false" ng-show="$root.repeatHide" ng-controller="MainCtrl">
         <p>PortableWiki Version: 0.3</p>                                            
     </div>   
 

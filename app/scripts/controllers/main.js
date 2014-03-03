@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('styleApp')
-  .controller('MainCtrl', function ($rootScope,$scope, DB, $http, $location) {
+  .controller('MainCtrl', function ($timeout, $rootScope,$scope, DB, $http, $location) {
       $scope.isShowMenu = true;
       $scope.contents = [];
       $scope.helpContent = "";
@@ -103,4 +103,11 @@ angular.module('styleApp')
                  })
               .modal('show');
       }
+      
+      $rootScope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
+          console.log("Repeat Finish");
+          $timeout(function() {
+               $rootScope.repeatHide = true;
+          }, 500);
+      });
   });

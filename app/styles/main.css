@@ -71,6 +71,22 @@ body {
   overflow: hidden;
 }
 
+.article > .loading_page {
+  height: 876px;
+  background-color: white;
+  padding: 28px 42px 42px 42px;
+  /* A4 width */
+  width: 620px;
+  -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+  margin: 0px auto 50px auto;
+}
+
+.loading_page  i {
+  margin-top: 300px ;
+  margin-left: 220px ;
+}
+
 .article > .session {
   min-height: 876px;
   background-color: white;

@@ -1,8 +1,10 @@
 <div class="article">
-    <div class="session" ng-repeat="content in contents" ng-init="isEdit= false">
+    <div class="loading_page" ng-init="$root.repeatHide=false" ng-hide="$root.repeatHide">
+        <div class="content view">
+            <i class="massive loading icon"></i>
+        </div> 
+    </div>
+    <div class="session" ng-repeat="content in contents" on-finish-render-filters>
         <div class="content view" ng-hide="isEdit" ng-bind-html="content"></div> 
-        <!--   <div class="content edit d{{$index}}" ng-show="isEdit"> -->
-        <!--    <textarea ng-bind-html="editContent[$index]"></textarea> -->
-        <!-- </div> -->
     </div>
 </div>
