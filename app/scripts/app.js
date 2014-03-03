@@ -34,6 +34,10 @@ angular.module('styleApp', [
         templateUrl: 'views/help.html',
         controller: 'MainCtrl'
       })
+      .when('/Search', {
+        templateUrl: 'views/search.html',
+        controller: 'SearchCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

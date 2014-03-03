@@ -351,7 +351,6 @@ void wiki_show_search_results_json(HttpResponse *res, char *expr)
 
 	pages = wiki_get_pages(&n_pages, expr);
     http_response_set_content_type(res, "application/json");
-    http_response_printf(res, "%c", '[');
     http_response_printf(res, "%c", '{');
     http_response_printf(res, "%s", "\"data\":[");
 	if (pages) {
@@ -360,13 +359,12 @@ void wiki_show_search_results_json(HttpResponse *res, char *expr)
 		}
         // remove ,
         removeOneChar(res);
-        http_response_printf(res, "%s", "]}");
-	    http_response_printf(res, ",{\"status\":\"ok\"}");
+        http_response_printf(res, "%s", "]");
+	    http_response_printf(res, ",\"status\":\"ok\"}");
 	} else {
 		http_response_printf(res, "\"status\":\"no match\"");
 	}
 
-    http_response_printf(res, "%c", ']');
 	http_response_send(res);
 
 	exit(0);

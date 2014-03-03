@@ -22,6 +22,7 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/view.js"></script>
+        <script src="scripts/controllers/search.js"></script>
         <script src="scripts/dbFactory.js"></script>
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/semantic-ui/packaged/javascript/semantic.js"></script>
@@ -48,8 +49,8 @@
                 <i class="plus large icon"></i> Create
             </a>
             <div class="ui mini icon input search_offset">
-                <input type="text" placeholder="Search ...">
-                <i class="search icon"></i>
+                <input type="text" placeholder="Search ..." ng-keypress="search($event)">
+                <i class="search icon" ng-click="search()"></i>
             </div>
             <div class="right menu">
                 <div class="ui icon top right pointing dropdown item">

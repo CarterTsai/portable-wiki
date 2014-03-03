@@ -74,6 +74,19 @@ angular.module('styleApp')
           });    
       }
 
+      $scope.search = function (event) {
+          if(typeof event === 'undefined' || event.charCode == 13) {
+              var expression = $(".search_offset > input").val();
+              DB.search(expression, function(content, status) {
+                 if(content.status == "ok") {
+                    $rootScope.searchContent = content.data;
+                    DB.searchContent = content.data;
+                    $location.path("Search");
+                 } 
+             })
+         }
+      }   
+
       $scope.delete = function (name) {
           $('.ui.modal')
               .modal('setting', {

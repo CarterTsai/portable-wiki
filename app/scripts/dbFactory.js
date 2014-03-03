@@ -7,6 +7,7 @@ angular.module('styleApp')
     var content = "";
     var info = {};
     var _index = [];
+    var _searchContent = ["No Match"];
 
     base.htmlGet = function(wikiname, cb) {
         $http({method: "GET", url: "html/"+wikiname})
@@ -100,6 +101,22 @@ angular.module('styleApp')
                   cb(data, status);
               });
     }
+
+    base.find = function (expression, cb) {
+        $http({ method: "GET", 
+                url: "find",
+                params : {expr: expression}
+              })
+             .success(function(data, status){
+                 _searchContent = [];
+                 _searchContent = data.data;
+                 cb(data, status)
+             ;})      
+             .error(function(data, status, headers, config) {
+                  _searchContent = ["No Match"];
+                  cb(data, status);
+              }); 
+    }  
     
     var factoryFunction = {
         wikiGet   : base.wikiGet,
@@ -111,7 +128,9 @@ angular.module('styleApp')
         del    : base.del,
         create : base.create,
         preview: base.preview,
-        change : base.change
+        change : base.change,
+        search : base.find,
+        searchContent : _searchContent
     };
     return factoryFunction;
 });
