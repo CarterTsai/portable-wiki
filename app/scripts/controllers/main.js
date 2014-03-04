@@ -81,8 +81,8 @@ angular.module('styleApp')
                  if(content.status == "ok") {
                     $rootScope.searchContent = content.data;
                     DB.searchContent = content.data;
-                    $location.path("Search");
                  } 
+                $location.path("Search");
              })
          }
       }   

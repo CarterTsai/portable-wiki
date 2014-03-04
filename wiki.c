@@ -360,9 +360,9 @@ void wiki_show_search_results_json(HttpResponse *res, char *expr)
         // remove ,
         removeOneChar(res);
         http_response_printf(res, "%s", "]");
-	    http_response_printf(res, ",\"status\":\"ok\"}");
+	    http_response_printf(res, "%s" ,",\"status\":\"ok\"}");
 	} else {
-		http_response_printf(res, "\"status\":\"no match\"");
+		http_response_printf(res, "],\"status\":\"no match\"}");
 	}
 
 	http_response_send(res);
