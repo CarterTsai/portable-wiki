@@ -66,7 +66,7 @@ void wiki_show_changes_page(HttpResponse *res)
 	}
 
 	http_response_printf(res, "<p>Wiki changes are also available as a "
-	                     "<a href='ChangesRss'>RSS</a> feed.\n");
+	                     "<a href='/rss'>RSS</a> feed.\n");
 
 //	wiki_show_footer(res);
 	http_response_send(res);

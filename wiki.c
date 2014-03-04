@@ -625,7 +625,10 @@ void wiki_handle_http_request(HttpRequest *req)
         chdir("../");
         exit(0);
     }
-
+    // RSS
+    if( !strcmp(wikipath, "rss") ) {
+	    wiki_show_changes_page_rss(res);
+    }
     // Handle wiki Event
     if( !strcmp(wikipath, "wiki/") ) {
 		page = page + 1;
