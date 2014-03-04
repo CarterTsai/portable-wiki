@@ -111,3 +111,25 @@ angular.module('styleApp')
           }, 500);
       });
   });
+
+angular.module('styleApp')
+  .controller('DiffCtrl', function ($rootScope,$scope, DB, $routeParams ,$location) {
+        var diffCtrl = $location.path().slice(1,5);
+        var diffName = $routeParams.name;
+        $scope.diffContent = "No Changes Info";
+        
+        if (diffCtrl == 'Diff') {
+            DB.diff(diffName, 'diff1' ,function(data, status) {
+                if( status === 200 ) {
+                    $scope.diffContent = data;
+                }
+            });
+        } else {
+            DB.diff(diffName, 'diff2' ,function(data, status) {
+                if( status === 200 ) {
+                    $scope.diffContent = data;
+                }
+            });
+        }
+        $rootScope.repeatHide = true; 
+  });

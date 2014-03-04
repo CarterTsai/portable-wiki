@@ -38,6 +38,14 @@ angular.module('styleApp', [
         templateUrl: 'views/search.html',
         controller: 'SearchCtrl'
       })
+      .when('/Diff/:name', {
+        templateUrl: 'views/diff.html',
+        controller: 'DiffCtrl'
+      })
+      .when('/Comp/:name', {
+        templateUrl: 'views/diff.html',
+        controller: 'DiffCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

@@ -101,6 +101,25 @@ angular.module('styleApp')
                   cb(data, status);
               });
     }
+    
+    base.diff = function (diffname, ctrl, cb){
+        var _params = "";
+
+        if(ctrl === "diff1") {
+            _params = {diff1: diffname};
+        } else { 
+            _params = {diff2: diffname};
+        }
+
+        $http({ method: "GET", 
+                url: "diff",
+                params: _params
+              })
+             .success(function(html, status){cb(html, status);})      
+             .error(function(data, status, headers, config) {
+                  cb(data, status);
+              });
+    }
 
     base.find = function (expression, cb) {
         $http({ method: "GET", 
@@ -129,6 +148,7 @@ angular.module('styleApp')
         create : base.create,
         preview: base.preview,
         change : base.change,
+        diff : base.diff,
         search : base.find,
         searchContent : _searchContent
     };

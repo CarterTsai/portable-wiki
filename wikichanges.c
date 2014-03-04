@@ -48,8 +48,8 @@ void wiki_show_changes_page(HttpResponse *res)
 		if (strstr(pages[i]->name, ".prev.1")) {
 			strcpy(spacing, "&nbsp;&nbsp;");
 			lg = asprintf(&difflink,
-			              "<a href='diff?diff1=%s'>diff</a>\n"
-			              "<a href='diff?diff2=%s'>comp</a>\n",
+			              "<a href='/#/Diff/%s'>diff</a>\n"
+			              "<a href='/#/Comp/%s'>comp</a>\n",
 			              pages[i]->name, pages[i]->name);
 		} else {
 			*spacing = '\0';
