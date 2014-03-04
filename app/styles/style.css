@@ -42,20 +42,14 @@ textarea {
 }
 
 .content a, ulink{
-   color: #333 ;
+   color: #009FDA;
+   font-weight: 700;
    text-decoration:none;
-   border-bottom: 1px #333 dotted;
    display: inline;
  }
 
-.content > a:hover {
-   color: #333;
-   text-decoration: None;
-   border-bottom: 1px #000 solid;
-   }
-
-.session a:visited {
-   color: #333;
+.content  a:hover {
+   color: #CCE2FF;
 }
 
 ul {

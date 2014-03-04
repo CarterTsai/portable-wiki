@@ -1,7 +1,7 @@
 /* Space out content a bit */
-
 body {
   background-color: #ececec;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif/*rtl:"Droid Arabic Kufi", "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif */; 
 }
 
 .item > a:hover {
@@ -9,7 +9,7 @@ body {
 }
 
 .item > a {
- color: #009FDA;
+ color: white;
  text-decoration: none;
 }
 
@@ -171,4 +171,15 @@ body {
   to {
     height: 400px;
   }
+}
+
+Pseudo ::before element
+ol.ui.list li:before, .ui.ordered.list .item:before {
+    position: absolute;
+    left: -2em;
+    counter-increment: ordered;
+    content: counters(ordered, ".")".";
+    text-align: right;
+    vertical-align: top;
+    opacity: 0.75;
 }
