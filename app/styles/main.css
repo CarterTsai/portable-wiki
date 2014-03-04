@@ -87,12 +87,37 @@ body {
   margin-left: 220px ;
 }
 
-.article > .session {
+@media screen and (max-width: 1200px) {
+    .hideTable {
+        display: none;
+    }
+    .showTable { 
+        display: block;
+    }
+    .session {
+        width: 620px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .hideTable {
+        display: block;
+    }
+    .showTable { 
+        display: none;
+    }
+    .session {
+        float: left;
+        margin-left: 4% !important;
+        width: 40%;
+    }
+}
+
+.session {
   min-height: 876px;
   background-color: white;
   padding: 28px 42px 42px 42px;
   /* A4 width */
-  width: 620px;
   height: 100%;
   line-height: 30px;
   -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
