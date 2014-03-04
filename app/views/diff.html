@@ -1,4 +1,10 @@
 <div class="article">
+    <div class="loading_page" ng-init="$root.repeatHide=false" ng-hide="$root.repeatHide">
+        <div class="content view">
+            <i class="massive loading icon"></i>
+        </div>
+    </div>
+
     <div class="session">
         <div class="content view" ng-bind-html="diffContent"></div>
     </div>

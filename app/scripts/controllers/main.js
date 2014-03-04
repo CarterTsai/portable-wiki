@@ -123,13 +123,14 @@ angular.module('styleApp')
                 if( status === 200 ) {
                     $scope.diffContent = data;
                 }
+                $rootScope.repeatHide = true; 
             });
         } else {
             DB.diff(diffName, 'diff2' ,function(data, status) {
                 if( status === 200 ) {
                     $scope.diffContent = data;
                 }
+                $rootScope.repeatHide = true; 
             });
         }
-        $rootScope.repeatHide = true; 
   });
