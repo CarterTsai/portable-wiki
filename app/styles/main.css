@@ -66,6 +66,12 @@ body {
   padding-left: 60px !important;
 }
 
+.show_menu .ctx {
+    height: 390px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 .article {
   padding: 5px 0px 0px 0px;
   overflow: hidden;
