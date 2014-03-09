@@ -64,6 +64,8 @@ body {
   animation-fill-mode: forwards;
   padding-top: 20px !important;
   padding-left: 60px !important;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .article {

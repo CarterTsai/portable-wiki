@@ -13,12 +13,7 @@ angular.module('styleApp')
       $rootScope.diff = [];
 
       $('.ui.dropdown').dropdown();
-      
-      DB.getList(function(data){
-            $rootScope.lists = [];
-            $rootScope.lists.push(data); 
-      });  
-    
+       
       DB.htmlGet("WikiHome", function(data) { 
             $scope.contents.push(data);
       });
@@ -32,6 +27,13 @@ angular.module('styleApp')
            $rootScope.diff.push(data);
       });    
       
+      $scope.updateIndex = function() {
+        DB.updateList(function(data){
+            $rootScope.lists = [];
+            $rootScope.lists.push(data); 
+        });  
+      };
+
       $scope.Preview = function() {
         var _content  = "="+ $scope.title +"\n" + $scope.createContent;
          DB.preview(_content ,function (html) { 
@@ -52,11 +54,7 @@ angular.module('styleApp')
            var _content = "= " + $scope.title + "\n" + $scope.createContent;
            DB.create(_content, $scope.title, function(data) { 
                 console.log("create success!!");
-                DB.updateList(function(data){
-                    $rootScope.lists = [];
-                    $rootScope.lists.push(data);
-                    $location.path("/");
-                });  
+                $location.path("/");
            });
       }
 

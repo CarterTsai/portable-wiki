@@ -43,7 +43,7 @@
     <div class = "ui fixed transparent main menu" ng-init="isShowMenu=true" ng-controller="MainCtrl">
         <div class="container">
             <a href="/" class="launch item" ng-click="$parent.isShowMenu=false"><i class="icon large home"></i> PortableWiki </a>
-            <a href="" ng-click="$parent.isShowMenu=!$parent.isShowMenu" class="item icon">
+            <a href="" ng-click="$parent.isShowMenu=!$parent.isShowMenu;updateIndex()" class="item icon">
                 <i class="ordered list large icon"></i> Index
             </a>
             <a href="#/Create" ng-click="$parent.isShowMenu=false" class="item icon">

@@ -43,20 +43,6 @@ angular.module('styleApp')
               });
     }
     
-    base.list = function(cb) {
-        if( _index.length == 0 ) {
-            $http({ method: "GET", 
-                url: "list/"
-              })
-             .success(function(data, status){ _index = data; cb(data, status);})
-             .error(function(data, status, headers, config) {
-                  cb(data, status);
-              });
-        } else {
-            cb(_index);
-        }
-    }
-
     base.create = function(_data, title, cb) {
         $http({ method: "GET", 
                 url: "wiki/"+title,
@@ -141,7 +127,6 @@ angular.module('styleApp')
         wikiGet   : base.wikiGet,
         htmlGet   : base.htmlGet,
         updateWiki : base.update,
-        getList: base.list,
         updateList: base.updateList,
         edit   : base.put,
         del    : base.del,
