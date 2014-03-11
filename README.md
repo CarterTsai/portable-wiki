@@ -3,10 +3,12 @@ Portable-wiki
 
 portable-wiki
 
-
 ### Build
 ```
+$> git clone https://github.com/CarterTsai/portable-wiki.git
+$> cd portable-wiki
 $> make
+$> ./portablewiki
 ```
 
 ### Usage
