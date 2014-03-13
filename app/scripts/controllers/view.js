@@ -19,9 +19,23 @@ angular.module('styleApp')
     $scope.show = function(index) {
        var _tmp = $(".d"+index+" > textarea").val();
        DB.updateWiki($scope.contentId, _tmp, function(data){
-          DB.preview(_tmp, function(html) { 
-              $scope.content = html;
-          });
+         
+        var slice_length = 1024;
+        var slice_num = _tmp.length / slice_length;      
+        var slice_start = 0;
+        var slice_end = slice_length;
+        $scope.content = "";
+        
+        for(var i=0; i< slice_num  ;) {
+            i++;
+            var slice_data = _tmp.slice(slice_start, slice_end);
+            slice_start = (i * slice_length) -1 ;
+            slice_end = slice_length + slice_start; 
+
+            DB.preview(slice_data, i ,function(html) { 
+              $scope.content += html;
+            });
+        }
        }); 
     }
 

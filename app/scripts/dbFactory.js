@@ -66,11 +66,11 @@ angular.module('styleApp')
               });
     }
 
-    base.preview = function(content, cb) {
+    base.preview = function(content, _id ,cb) {
     
         $http({ method: "GET", 
                 url: "html/",
-                params: {preview: content}
+                params: {preview: content, id: _id}
               })
              .success(function(html, status){ cb(html, status);})
              .error(function(data, status, headers, config) {

@@ -36,9 +36,22 @@ angular.module('styleApp')
 
       $scope.Preview = function() {
         var _content  = "="+ $scope.title +"\n" + $scope.createContent;
-         DB.preview(_content ,function (html) { 
-             $scope.liveContent = html;
-         });
+        var slice_length = 1024;
+        var slice_num = _content.length / slice_length;      
+        var slice_start = 0;
+        var slice_end = slice_length;
+        $scope.liveContent = "";
+        
+        for(var i=0; i< slice_num  ;) {
+            i++;
+            var slice_data = _content.slice(slice_start, slice_end);
+            slice_start = (i * slice_length) -1 ;
+            slice_end = slice_length + slice_start; 
+            
+            DB.preview(slice_data, i ,function (html) { 
+                $scope.liveContent += html;
+            });
+        }
       }
 
       $scope.show = function(index) {
