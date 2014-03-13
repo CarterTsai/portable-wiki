@@ -249,25 +249,25 @@ static char *check_for_link(char *line, int *skip_chars)
 		    !strncmp(url + len - 4, ".jpg", 4) ||
 		    !strncmp(url + len - 5, ".jpeg", 5)) {
 			if (pic_width)
-				sprintf(width_pic_str, " width=\"%i\"", pic_width);
+				sprintf(width_pic_str, " width='%i'", pic_width);
 			else
 				width_pic_str[0] = '\0';
 
 			if (pic_height)
-				sprintf(height_pic_str, " height=\"%i\"", pic_height);
+				sprintf(height_pic_str, " height='%i'", pic_height);
 			else
 				height_pic_str[0] = '\0';
 
 			if (pic_border)
-				sprintf(border_pic_str, " border=\"%i\"", pic_border);
+				sprintf(border_pic_str, " border='%i'", pic_border);
 			else
 				border_pic_str[0] = '\0';
 
 			if (title) // case: [image link]
-				lgasprintf = asprintf(&result, "<a href=\"%s\"><img src=\"%s\"%s%s%s></a>",
+				lgasprintf = asprintf(&result, "<a href='%s'><img src='%s'%s%s%s></a>",
 				                      title, url, border_pic_str, width_pic_str, height_pic_str);
 			else // case: http://link_to_image
-				lgasprintf = asprintf(&result, "<img src=\"%s\"%s%s%s>",
+				lgasprintf = asprintf(&result, "<img src='%s'%s%s%s>",
 				                      url, border_pic_str, width_pic_str, height_pic_str);
 		} else { // url or title does'nt link to an image
 			char *extra_attr = "";
@@ -370,6 +370,699 @@ void search_header(char **sectionlist, char *raw_page_data)
 	return;
 }
 
+void wiki_print_data_as_json(HttpResponse *res, char *raw_page_data,
+                             char *page)
+{
+	char *p = raw_page_data;      /* accumulates non marked up text */
+	char *q = NULL, *link = NULL; /* temporary scratch stuff */
+	char *line = NULL;
+	int line_len;
+	int i, j, k, skip_chars;
+	char color_str[64];
+	char label[80];
+	char *str_ptr;
+	char *sectionlist;
+	int section = 0;
+	/* flags, mainly for open tag states */
+	int color_on = 0;
+	int bgcolor_on = 0;
+	int code_on = 0;
+	int highlight_on = 0;
+	int bold_on = 0;
+	int italic_on = 0;
+	int underline_on = 0;
+	int strikethrough_on = 0;
+	int open_para = 0;
+	int pre_on = 0;
+	int table_on = 0;
+	int form_on = 0;
+	int form_cnt = 0;
+	int num = 0;
+	int state = 0;
+
+	char color_k, color_prev = '\0';
+	char bgcolor_k, bgcolor_prev = '\0';
+	int private; /* flag 1 if access denied */
+
+#define ULIST 0
+#define OLIST 1
+#define NUM_LIST_TYPES 2
+
+	struct {
+		char ident;
+		int  depth;
+		char *tag;
+	} listtypes[] = {
+		{ '*', 0, "ul" },
+		{ '#', 0, "ol" }
+	};
+
+	search_header(&sectionlist, raw_page_data);
+
+	q = p;  /* p accumulates non marked up text, q is just a pointer
+       * to the end of the current line - used by below func.
+       */
+
+	private = 0;
+	while ((line = get_line_from_string(&q, &line_len)) && !private) {
+		int   header_level = 0;
+		int   blockquote_flag = 0;
+		char *line_start   = line;
+		int   skip_to_content = 0;
+		/*
+		 *  process any initial wiki chars at line beginning
+		 */
+
+		if (pre_on && !isspace(*line) && *line != '\0') {
+			/* close any preformatting if already on*/
+			http_response_printf(res, "</pre>") ;
+			pre_on = 0;
+		}
+
+		/* Handle ordered & unordered list, code is a bit mental.. */
+		for (i = 0; i < NUM_LIST_TYPES; i++) {
+
+			/* extra checks avoid bolding */
+			if (*line == listtypes[i].ident
+			    && (*(line + 1) == listtypes[i].ident || isspace(*(line + 1)))) {
+				int item_depth = 0;
+
+				if (listtypes[!i].depth) {
+					for (j = 0; j < listtypes[!i].depth; j++)
+						http_response_printf(res, "</%s>", listtypes[!i].tag);
+					listtypes[!i].depth = 0;
+				}
+
+				while (*line == listtypes[i].ident) {
+					line++;
+					item_depth++;
+				}
+
+				if (item_depth < listtypes[i].depth) {
+					for (j = 0; j < (listtypes[i].depth - item_depth); j++)
+						http_response_printf(res, "</%s>", listtypes[i].tag);
+				} else {
+					for (j = 0; j < (item_depth - listtypes[i].depth); j++)
+						http_response_printf(res, "<%s>", listtypes[i].tag);
+				}
+
+				http_response_printf(res, "<li>");
+				listtypes[i].depth = item_depth;
+				skip_to_content = 1;
+			} else if (listtypes[i].depth && !listtypes[!i].depth) {
+				/* close current list */
+				for (j = 0; j < listtypes[i].depth; j++)
+					http_response_printf(res, "</%s>", listtypes[i].tag);
+
+				listtypes[i].depth = 0;
+			}
+		}
+
+		if (skip_to_content)
+			goto line_content; /* skip parsing any more initial chars */
+
+		/* Tables */
+
+		if (*line == '|') {
+			if (table_on == 0)
+				http_response_printf(res, "<table class='wikitable' cellspacing='0' cellpadding='4'>");
+
+			line++;
+
+			http_response_printf(res, "<tr><td>");
+			table_on = 1;
+			goto line_content;
+		} else {
+			if (table_on) {
+				http_response_printf(res, "</table>");
+				table_on = 0;
+			}
+		}
+
+		/* pre formated  */
+
+		if ((isspace(*line) || *line == '\0')) {
+			int n_spaces = 0;
+
+			while (isspace(*line)) {
+				line++;
+				n_spaces++;
+			}
+
+			if (*line == '\0') { /* empty line - para */
+				if (pre_on) {
+					http_response_printf(res, "") ;
+					continue;
+				} else if (open_para) {
+					http_response_printf(res, "</p><p>") ;
+				} else {
+					http_response_printf(res, "<p>") ;
+					open_para = 1;
+				}
+			} else { /* starts with space so Pre formatted, see above for close */
+				if (!pre_on)
+					http_response_printf(res, "<pre>") ;
+				pre_on = 1;
+				line = line - (n_spaces - 1); /* rewind so extra spaces
+                                                 they matter to pre */
+				http_response_printf(res, "%s", line);
+				continue;
+			}
+		} else if (*line == '=') { //header
+			section++;
+			while (*line == '=') {
+				header_level++;
+				line++;
+			}
+			http_response_printf(res, "<h%d class='ui header' id='section%i'>", header_level, section);
+			p = line;
+		} else if (*line == '-' && *(line + 1) == '-') { //rule
+			http_response_printf(res, "<hr/>");
+			while (*line == '-') line++;
+		} else if (*line == '\'') { //quote
+			blockquote_flag = 1;
+			line++;
+			http_response_printf(res, "<blockquote>");
+		}
+
+line_content:
+		/*
+		 * now process rest of the line
+		 */
+
+		p = line;
+
+		while (*line != '\0') {
+			/* ignore link */
+			if (*line == '!' && !isspace(*(line + 1))) {
+				/* escape next word - skip it */
+				*line = '\0';
+				http_response_printf(res, "%s", p);
+				p = ++line;
+
+				while (*line != '\0' && !isspace(*line)) line++;
+				if (*line == '\0')
+					continue;
+			}
+			/* search for link inside the line */
+			else if ((link = check_for_link(line, &skip_chars)) != NULL) {
+				http_response_printf(res, "%s", p);
+				http_response_printf(res, "%s", link);
+
+				line += skip_chars;
+				p = line;
+
+				continue;
+			}
+			/* TODO: Below is getting bloated and messy, need rewriting more
+			 *       compactly ( and efficently ).
+			 */
+			else if (*line == '{' && *(line + 1) == '{')
+				/* Proceed double braces */
+			{
+				if (line_start != line
+				    && !is_wiki_format_char_or_space(*(line - 1))) {
+					line = line + 2;
+					continue;
+				}
+				/* search closing braces */
+				k = 2;
+				while (*(line + k) != '}') {
+					if (*(line + k) == '\0') {
+						line = line + 2;
+						continue;
+					}
+					k++;
+				}
+				k++;
+				if (*(line + k) == '}')
+					*(line + k) = '\0'; //terminate the line
+				else {
+					line = line + 2;
+					continue;
+				}
+
+				/* Parse tags between double braces */
+				// need to be rewritten
+
+				/* search image/video size */
+				wiki_parse_between_braces(line + 2);
+				/* Expand */
+				if ((str_ptr = strstr(line + 2, "expand"))) {
+					if (*(str_ptr - 1) == '-') { //terminate expand
+						http_response_printf(res, "</div></div>");
+					} else {
+						/* search label */
+						if (*(str_ptr + 6) == '=') {
+							i = 0;
+							str_ptr += 7;
+							while ((*str_ptr != '}' && *str_ptr != '\0') && i < 80) {
+								label[i] = *str_ptr;
+								str_ptr++;
+								i++;
+							}
+							label[i] = '\0';
+						} else
+							strcpy(label, "Click here!");
+
+						expand_collapse_num++;
+						http_response_printf(res,
+						                     "<div id='wrapper'>"
+						                     "<p>"
+						                     "<a onclick='expandcollapse('myvar%i');' "
+						                     "title='Expand or collapse'>%s</a>"
+						                     "</p>"
+						                     "<div id='myvar%i' style='display:none'>",
+						                     expand_collapse_num, label, expand_collapse_num);
+					}
+				}
+				/* Collapse */
+				else if ((str_ptr = strstr(line + 2, "collapse"))) {
+					if (*(str_ptr - 1) == '-') { //terminate expand
+						http_response_printf(res, "</div></div>");
+					} else {
+						/* search label */
+						if (*(str_ptr + 8) == '=') {
+							i = 0;
+							str_ptr += 9;
+							while ((*str_ptr != '}' && *str_ptr != '\0') && i < 80) {
+								label[i] = *str_ptr;
+								str_ptr++;
+								i++;
+							}
+							label[i] = '\0';
+						} else
+							strcpy(label, "Click here!");
+
+						expand_collapse_num++;
+						http_response_printf(res,
+						                     "<div id='wrapper'>"
+						                     "<p>"
+						                     "<a onclick='expandcollapse('myvar%i');' "
+						                     "title='Expand or collapse'>%s</a>"
+						                     "</p>"
+						                     "<div id='myvar%i'>",
+						                     expand_collapse_num, label, expand_collapse_num);
+					}
+				}
+				/* Upload a file */
+				if ((strstr(line + 2, "upload"))) {
+					http_response_printf(res,
+					                     "<p><FORM ACTION='Upload' METHOD='post' ENCTYPE='multipart/form-data'>"
+					                     "<input type=file><br>"
+					                     "Note about this file: <input type=text name=note><br>"
+					                     "<P><INPUT TYPE=submit VALUE=validate></P>"
+					                     "</form></p>");
+				}
+				/* table of contents */
+				if (strstr(line + 2, "toc")) {
+					int sectioncnt = 0;
+					while ((str_ptr = strchr(sectionlist, '\n'))) {
+						*str_ptr = '\0';
+
+						sectioncnt++;
+						/* header level */
+						int item_depth = 0;
+						while (*sectionlist == '=') {
+							sectionlist++;
+							item_depth++;
+						}
+						/* indent */
+						for (j = 0; j < item_depth; j++)
+							http_response_printf(res, "<ul>");
+						/* skip first ! */
+						if (*sectionlist == '!')
+							sectionlist++;
+						http_response_printf(res,
+						                     "<li><a href='#section%i'>%s</a></li>",
+						                     sectioncnt, sectionlist);
+						/* reset indentation */
+						for (j = 0; j < item_depth; j++)
+							http_response_printf(res, "</ul>");
+						item_depth = 0;
+						/* point to the next header */
+						sectionlist = str_ptr + 1;
+					}
+				}
+				/* entry  */
+				if ((str_ptr = strstr(line + 2, "entry"))) {
+					/* close form already opened */
+					if (form_on)
+						http_response_printf(res, "</form>");
+
+					form_on = 1; //so we know we will have to close <form>
+					form_cnt++; //for datafield
+					http_response_printf(res,
+					                     "<form method=POST action='%s?entry' name='entryform'>", page);
+
+					int size = 30;
+					char date[80] = "";
+
+					if (*(str_ptr + 5)) {
+						if ((strstr(str_ptr + 5, "tiny")))
+							size = 10;
+						else if ((strstr(str_ptr + 5, "small")))
+							size = 20;
+						else if ((strstr(str_ptr + 5, "medium")))
+							size = 40;
+						else if ((strstr(str_ptr + 5, "large")))
+							size = 60;
+						else if ((strstr(str_ptr + 5, "huge")))
+							size = 80;
+
+						if ((str_ptr = strstr(str_ptr + 5, "date"))) {
+							time_t now;
+							struct tm * timeinfo;
+							(void) time(&now);
+							timeinfo = localtime(&now);
+							strftime(date, 80, "%a %b %d %H:%M ", timeinfo);
+						}
+					}
+					/* hidden datafield gives the {{data#}} to use */
+					http_response_printf(res,
+					                     "<p><input type='text' name='data' value='%s' size='%i' title='Entrer your text'>"
+					                     "</p>"
+					                     "<input type='hidden' name='datafield' value='%i' />"
+					                     "<p><input type=submit name='add' value='Add' title='[alt-a]' accesskey='a'>"
+					                     "</p>", date, size, form_cnt);
+				}
+				/* Simple checkbox */
+				if ((str_ptr = strstr(line + 2, "checkbox"))) {
+					num = state = 0;
+					if (*(str_ptr + 8) == '=')
+						num = atol(str_ptr + 9);
+					if ((str_ptr = strchr(str_ptr + 9, ';')))
+						state = atoi(str_ptr + 1);
+					/* little trick: checkbox unchecked is not posted
+					 * the input hidden returns the value 0
+					 * we have the values: 0 , 1 when checked
+					 * and 0 when unchecked. browser must operate sequentially!
+					 */
+					http_response_printf(res,
+					                     "<input type='hidden' name='checkbox%i' value='0' />"
+					                     "<input type='checkbox' name='checkbox%i' value='1' %s /> ",
+					                     num, num, state ? "checked='checked'" : "");
+				}
+				/* Save checkboxes state */
+				if ((strstr(line + 2, "save"))) {
+					http_response_printf(res,
+					                     "<input type=submit name='save' value='Save' title='[alt-s]' accesskey='s'>");
+				}
+				/* Delete field */
+				if ((strstr(line + 2, "delete"))) {
+					http_response_printf(res,
+					                     "<input type=submit name='delete' value='Delete' title='[alt-d]' accesskey='d'>");
+				}
+
+				line += k; //point to '\0' (the last closing brace)
+				p = line + 1; //point just after '\0'
+			} //end of the double braces
+
+			/* single braces */
+			else if (*line == '{' && strchr("RGBYPCD", *(line + 1)) && *(line + 2) == '}') {
+				/* Text color */
+				if (line_start != line
+				    && !is_wiki_format_char_or_space(*(line - 1))
+				    && !color_on) {
+					line++;
+					continue;
+				}
+
+				if ((isspace(*(line + 3)) && !color_on)) {
+					line++;
+					continue;
+				}
+
+				/* color */
+				*line = '\0';
+				color_k = *(line + 1);
+				switch (color_k) {
+				case 'R':
+					strcpy(color_str, "<FONT COLOR='#FF0000'>");
+					break;
+				case 'G':
+					strcpy(color_str, "<FONT COLOR='#00FF00'>");
+					break;
+				case 'B':
+					strcpy(color_str, "<FONT COLOR='#0000FF'>");
+					break;
+				case 'Y':
+					strcpy(color_str, "<FONT COLOR='#FFFF00'>");
+					break;
+				case 'P':
+					strcpy(color_str, "<FONT COLOR='#FF00FF'>");
+					break;
+				case 'C':
+					strcpy(color_str, "<FONT COLOR='#00FFFF'>");
+					break;
+				case 'D':
+					strcpy(color_str, "<FONT COLOR='#000000'>");
+					break;
+				}
+
+				if (color_prev && color_k != color_prev) {
+					color_on = 0; /* reset flag */
+					http_response_printf(res, "%s", "</FONT>");
+				}
+				color_prev = color_k;
+
+				http_response_printf(res, "%s%s", p, color_on ? "</FONT>" : color_str);
+				color_on ^= 1; /* switch flag */
+				p = line + 3;
+			} else if (*line == '(' && strchr("RGBYPCD", *(line + 1)) && *(line + 2) == ')') {
+				/* bgcolor */
+				if (line_start != line
+				    && !is_wiki_format_char_or_space(*(line - 1))
+				    && !bgcolor_on) {
+					line++;
+					continue;
+				}
+
+				if ((isspace(*(line + 3)) && !bgcolor_on)) {
+					line++;
+					continue;
+				}
+
+				/* color */
+				*line = '\0';
+				bgcolor_k = *(line + 1);
+				switch (bgcolor_k) {
+				case 'R':
+					strcpy(color_str, "<SPAN class='R'>");
+					break;
+				case 'G':
+					strcpy(color_str, "<SPAN class='G'>");
+					break;
+				case 'B':
+					strcpy(color_str, "<SPAN class='B'>");
+					break;
+				case 'Y':
+					strcpy(color_str, "<SPAN class='Y'>");
+					break;
+				case 'P':
+					strcpy(color_str, "<SPAN class='P'>");
+					break;
+				case 'C':
+					strcpy(color_str, "<SPAN class='C'>");
+					break;
+				}
+
+				if (bgcolor_prev && bgcolor_k != bgcolor_prev) {
+					bgcolor_on = 0; /* reset flag */
+					http_response_printf(res, "%s", "</SPAN>");
+				}
+				bgcolor_prev = bgcolor_k;
+
+				http_response_printf(res, "%s%s", p, bgcolor_on ? "</SPAN>" : color_str);
+				bgcolor_on ^= 1; /* switch flag */
+				p = line + 3;
+
+			} else if (*line == '`') {
+				/* code */
+				if (line_start != line
+				    && !is_wiki_format_char_or_space(*(line - 1))
+				    && !code_on) {
+					line++;
+					continue;
+				}
+
+				if ((isspace(*(line + 1)) && !code_on)) {
+					line++;
+					continue;
+				}
+
+				*line = '\0';
+				http_response_printf(res, "%s%s", p, code_on ? "</CODE>" : "<CODE>");
+				code_on ^= 1; /* switch flag */
+				p = line + 1;
+			} else if (*line == '+') {
+				/* highlight */
+				if (line_start != line
+				    && !is_wiki_format_char_or_space(*(line - 1))
+				    && !highlight_on) {
+					line++;
+					continue;
+				}
+
+				if ((isspace(*(line + 1)) && !highlight_on)) {
+					line++;
+					continue;
+				}
+
+				*line = '\0';
+				http_response_printf(res, "%s%s", p, highlight_on ? "</SPAN>" : "<SPAN class='highlight'>");
+				highlight_on ^= 1; /* switch flag */
+				p = line + 1;
+			} else if (*line == '*') {
+				/* Try and be smart about what gets bolded */
+				if (line_start != line
+				    && !is_wiki_format_char_or_space(*(line - 1))
+				    && !bold_on) {
+					line++;
+					continue;
+				}
+
+				if ((isspace(*(line + 1)) && !bold_on)) {
+					line++;
+					continue;
+				}
+
+				/* bold */
+				*line = '\0';
+				http_response_printf(res, "%s%s", p, bold_on ? "</b>" : "<b>");
+				bold_on ^= 1; /* reset flag */
+				p = line + 1;
+
+			} else if (*line == '_') {
+				if (line_start != line
+				    && !is_wiki_format_char_or_space(*(line - 1))
+				    && !underline_on) {
+					line++;
+					continue;
+				}
+
+				if (isspace(*(line + 1)) && !underline_on) {
+					line++;
+					continue;
+				}
+				/* underline */
+				*line = '\0';
+				http_response_printf(res, "%s%s", p, underline_on ? "</u>" : "<u>");
+				underline_on ^= 1; /* reset flag */
+				p = line + 1;
+			} else if (*line == '-') {
+				if (line_start != line
+				    && !is_wiki_format_char_or_space(*(line - 1))
+				    && !strikethrough_on) {
+					line++;
+					continue;
+				}
+
+				if (isspace(*(line + 1)) && !strikethrough_on) {
+					line++;
+					continue;
+				}
+
+				/* strikethrough */
+				*line = '\0';
+				http_response_printf(res, "%s%s", p, strikethrough_on ? "</del>" : "<del>");
+				strikethrough_on ^= 1; /* reset flag */
+				p = line + 1;
+			} else if (*line == '/') {
+				if (line_start != line
+				    && !is_wiki_format_char_or_space(*(line - 1))
+				    && !italic_on) {
+					line++;
+					continue;
+				}
+
+				if (isspace(*(line + 1)) && !italic_on) {
+					line++;
+					continue;
+				}
+
+				/* crude path detection */
+				if (line_start != line && isspace(*(line - 1)) && !italic_on) {
+					char *tmp   = line + 1;
+					int slashes = 0;
+
+					/* Hack to escape out file paths */
+					while (*tmp != '\0' && !isspace(*tmp)) {
+						if (*tmp == '/') slashes++;
+						tmp++;
+					}
+
+					if (slashes > 1 || (slashes == 1 && *(tmp - 1) != '/')) {
+						line = tmp;
+						continue;
+					}
+				}
+
+				if (*(line + 1) == '/')
+					line++;     /* escape out common '//' - eg urls */
+				else {
+					/* italic */
+					*line = '\0';
+					http_response_printf(res, "%s%s", p, italic_on ? "</i>" : "<i>");
+					italic_on ^= 1; /* reset flag */
+					p = line + 1;
+				}
+			} else if (*line == '|' && table_on) { /* table column */
+				*line = '\0';
+				http_response_printf(res, "%s", p);
+				http_response_printf(res, "</td><td>");
+				p = line + 1;
+			}
+
+			line++;
+
+		} /* while loop, next word */
+
+		if (*p != '\0')           /* accumulated text left over */
+			http_response_printf(res, "%s", p);
+
+		/* close any html tags that could be still open */
+
+		if (listtypes[ULIST].depth)
+			http_response_printf(res, "</li>");
+
+		if (listtypes[OLIST].depth)
+			http_response_printf(res, "</li>");
+
+		if (table_on)
+			http_response_printf(res, "</td></tr>");
+
+		if (header_level)
+			http_response_printf(res, "</h%d>", header_level);
+		else if (blockquote_flag)
+			http_response_printf(res, "</blockquote>");
+		else
+			http_response_printf(res, "");
+	} /* next line */
+
+	/*** clean up anything thats still open ***/
+
+	if (pre_on)
+		http_response_printf(res, "</pre>");
+
+	/* close any open lists */
+	for (i = 0; i < listtypes[ULIST].depth; i++)
+		http_response_printf(res, "</ul>");
+
+	for (i = 0; i < listtypes[OLIST].depth; i++)
+		http_response_printf(res, "</ol>");
+
+	/* close any open paras */
+	if (open_para)
+		http_response_printf(res, "</p>");
+
+	/* close table */
+	if (table_on)
+		http_response_printf(res, "</table>");
+	/* close form */
+	if (form_on)
+		http_response_printf(res, "</form>");
+}
 
 void wiki_print_data_as_html(HttpResponse *res, char *raw_page_data,
                              char *page)

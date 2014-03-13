@@ -5,7 +5,9 @@
             <a ng-hide="isEdit"><i class="icon edit" ng-click="edit(contentId);isEdit=true"></i></a>
             <a><i class="icon delete" ng-click="delete(contentId)"></i></a>
         </div>
-        <div class="content view" ng-hide="isEdit" ng-bind-html="content"></div>
+        <div class="content view" ng-hide="isEdit" ng-repeat="c in content track by $index">
+            <div ng-bind-html="c"></div>
+        </div>
         <div class="content edit d{{contentId}}" ng-show="isEdit">
             <textarea ng-bind-html="editContent[contentId]"></textarea>
         </div>

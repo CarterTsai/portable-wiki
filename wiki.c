@@ -694,6 +694,7 @@ void wiki_handle_http_request(HttpRequest *req)
     if( !strcmp(wikipath, "html/") ) {
         
         char *previewText = http_request_param_get(req, "preview");
+        char *previewID = http_request_param_get(req, "id");
 
         if(previewText == NULL) {
             
@@ -716,7 +717,10 @@ void wiki_handle_http_request(HttpRequest *req)
             exit(0);
         } else {
             http_response_printf_alloc_buffer(res, strlen(previewText) * 2);
-            wiki_print_data_as_html(res, previewText, page);
+		    http_response_set_content_type(res, "application/json");
+		    http_response_printf(res, "[{\"data\":\"");
+            wiki_print_data_as_json(res, previewText, page);
+		    http_response_printf(res, "\", \"id\":%c}]", *previewID);
 		    http_response_send(res);
             exit(0); 
         }

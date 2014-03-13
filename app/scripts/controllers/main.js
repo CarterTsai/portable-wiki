@@ -9,7 +9,7 @@ angular.module('styleApp')
       $rootScope.lists = [];
       $scope.title = "";
       $scope.createContent = "";
-      $scope.liveContent = "";
+      $scope.liveContent = [];
       $rootScope.diff = [];
 
       $('.ui.dropdown').dropdown();
@@ -40,7 +40,7 @@ angular.module('styleApp')
         var slice_num = _content.length / slice_length;      
         var slice_start = 0;
         var slice_end = slice_length;
-        $scope.liveContent = "";
+        $scope.liveContent = [];
         
         for(var i=0; i< slice_num  ;) {
             i++;
@@ -49,7 +49,7 @@ angular.module('styleApp')
             slice_end = slice_length + slice_start; 
             
             DB.preview(slice_data, i ,function (html) { 
-                $scope.liveContent += html;
+                $scope.liveContent[html[0].id] = html[0].data;
             });
         }
       }

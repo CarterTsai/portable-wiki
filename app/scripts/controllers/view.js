@@ -3,14 +3,14 @@
 angular.module('styleApp')
   .controller('ViewCtrl', function ($scope, DB, $http ,$routeParams, $location) {
     $scope.isShowMenu = true;
-    $scope.content = "";
+    $scope.content = [];
     $scope.editContent = [];
 
     $scope.contentId = $routeParams.contentId;
        
     DB.htmlGet($scope.contentId, function(data, status) {
           if (status != 404) {
-              $scope.content = data;
+              $scope.content[0] = data;
           } else {
                $location.path('/');
           }
@@ -24,7 +24,7 @@ angular.module('styleApp')
         var slice_num = _tmp.length / slice_length;      
         var slice_start = 0;
         var slice_end = slice_length;
-        $scope.content = "";
+        $scope.content = [];
         
         for(var i=0; i< slice_num  ;) {
             i++;
@@ -33,7 +33,7 @@ angular.module('styleApp')
             slice_end = slice_length + slice_start; 
 
             DB.preview(slice_data, i ,function(html) { 
-              $scope.content += html;
+              $scope.content[html[0].id] =  html[0].data;
             });
         }
        }); 

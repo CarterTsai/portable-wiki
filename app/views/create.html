@@ -11,11 +11,14 @@
             <div class="ui purple right submit button" ng-click="create()">Submit</div>
             <div class="ui red left submit button">Reset</div>
             <p></p>
-
-            <div class="content showTable" ng-bind-html="liveContent"></div>
+            <div class="content showTable" ng-repeat="content in liveContent track by $index">
+                <div ng-bind-html="content"></div>
+            </div>
         </div>    
     </div>
     <div class="session hideTable createPage"> 
-        <div ng-bind-html="liveContent"></div>
+        <div ng-repeat="content in liveContent track by $index"> 
+            <div ng-bind-html="content"></div>
+        </div>
     </div>
 </div>
