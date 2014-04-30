@@ -58,6 +58,7 @@ angular.module('styleApp')
          var _tmp = $(".d"+index+" > textarea").val();
          DB.updateWiki("WikiHome", _tmp, function(data){
             DB.htmlGet("WikiHome", function(html) { 
+                console.log(html);
                 $scope.contents[index] = html ;
             });
          });   

@@ -10,11 +10,18 @@ angular.module('styleApp')
     var _searchContent = ["No Match"];
 
     base.htmlGet = function(wikiname, cb) {
-        $http({method: "GET", url: "html/"+wikiname})
-              .success(function(data, status){ cb(data);}) 
-              .error(function(data, status, headers, config) {
-                  cb(data, status);
-              });
+       // $http({method: "GET", url: "html/"+wikiname})
+       //       .success(function(data, status){ cb(data);}) 
+       //       .error(function(data, status, headers, config) {
+       //           cb(data, status);
+       //       });
+
+        $http({method: "GET", url: "wiki/"+wikiname})
+              .success(function(data){ 
+                  var _data = markdown.toHTML(data);
+                  console.log(_data);
+                  cb(_data);
+              });     
     } 
     
     base.wikiGet = function(wikiname, cb) {
