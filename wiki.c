@@ -720,7 +720,7 @@ void wiki_handle_http_request(HttpRequest *req)
 		    http_response_set_content_type(res, "application/json");
 		    http_response_printf(res, "[{\"data\":\"");
             wiki_print_data_as_json(res, previewText, page);
-		    http_response_printf(res, "\", \"id\":%c}]", *previewID);
+		    http_response_printf(res, "\", \"id\":%s}]", previewID);
 		    http_response_send(res);
             exit(0); 
         }
